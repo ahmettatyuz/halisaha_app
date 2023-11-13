@@ -6,7 +6,7 @@ import 'package:halisaha_app/custom/custom_text_field.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/providers/auth_provider.dart';
 import 'package:halisaha_app/services/auth_service.dart';
-import 'package:halisaha_app/widgets/login/password_reset.dart';
+import 'package:halisaha_app/screens/register.dart';
 
 class Login extends ConsumerStatefulWidget {
   const Login({super.key});
@@ -25,12 +25,19 @@ class _LoginState extends ConsumerState<Login> {
   );
 
   void _resetPasswordModal() {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) {
-        return const PasswordReset();
-      },
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (ctx){
+      return const Register();
+    }));
+    // showModalBottomSheet(
+    //   backgroundColor: Theme.of(context).colorScheme.background,
+    //   isScrollControlled: true,
+    //   enableDrag: true,
+    //   useSafeArea: true,
+    //   context: context,
+    //   builder: (ctx) {
+    //     return const Register();
+    //   },
+    // );
   }
 
   void login() {
@@ -44,6 +51,7 @@ class _LoginState extends ConsumerState<Login> {
             ref.read(authProvider.notifier).auth(2);
           });
         } else {
+          ref.read(authProvider.notifier).auth(0);
           showDialog(
             context: context,
             builder: (ctx) {
@@ -115,7 +123,7 @@ class _LoginState extends ConsumerState<Login> {
                         children: [
                           TextButton(
                             onPressed: _resetPasswordModal,
-                            child: const Text("Parolamı unuttum"),
+                            child: const Text("Hesabınız yok mu ?"),
                           ),
                           CustomButton(
                             icon: Icons.sports_volleyball,

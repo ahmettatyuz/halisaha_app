@@ -1,11 +1,21 @@
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/providers/auth_provider.dart';
 import 'package:halisaha_app/screens/login.dart';
 import 'package:halisaha_app/screens/tabs.dart';
 import 'package:halisaha_app/services/auth_service.dart';
+
+final theme = ThemeData(
+  useMaterial3: true,
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.light,
+    seedColor: const Color.fromARGB(255, 1, 147, 50),
+  ),
+  textTheme: GoogleFonts.latoTextTheme(),
+);
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 AndroidOptions getAndroidOptions() => const AndroidOptions(
@@ -43,12 +53,7 @@ class _MyAppState extends ConsumerState<MyApp> {
     return MaterialApp(
       title: "Halısaha App",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.greenAccent,
-        ),
-      ),
+      theme: theme,
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
