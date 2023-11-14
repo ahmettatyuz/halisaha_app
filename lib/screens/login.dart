@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/custom/custom_button.dart.dart';
@@ -16,35 +15,52 @@ class Login extends ConsumerStatefulWidget {
 
 class _LoginState extends ConsumerState<Login> {
   int isLoggedIn = 0;
-  final dio = Dio(
-    BaseOptions(
-      validateStatus: (status) {
-        return status != null && status < 500;
-      },
-    ),
-  );
-
-  void _resetPasswordModal() {
-    Navigator.push(context, MaterialPageRoute(builder: (ctx){
+  bool isOwner = false;
+  void _register() {
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) {
       return const Register();
     }));
-    // showModalBottomSheet(
-    //   backgroundColor: Theme.of(context).colorScheme.background,
-    //   isScrollControlled: true,
-    //   enableDrag: true,
-    //   useSafeArea: true,
-    //   context: context,
-    //   builder: (ctx) {
-    //     return const Register();
-    //   },
-    // );
   }
 
-  void login() {
+  void loginOwner() {
     String phone = "5${telefonController.text}";
     String password = parolaController.text;
     ref.read(authProvider.notifier).auth(1);
-    AuthService.loginRequest(phone, password).then(
+    AuthService().loginOwnerRequest(phone, password).then(
+      (value) {
+        if (value.startsWith("ey")) {
+          TokenManager.setToken(value).then((_) {
+            ref.read(authProvider.notifier).auth(2);
+          });
+        } else {
+          ref.read(authProvider.notifier).auth(0);
+          showDialog(
+            context: context,
+            builder: (ctx) {
+              return AlertDialog(
+                title: const Text("Uyarı"),
+                content: Text(value.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Tamam"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  void loginPlayer() {
+    String phone = "5${telefonController.text}";
+    String password = parolaController.text;
+    ref.read(authProvider.notifier).auth(1);
+    AuthService().loginPlayerRequest(phone, password).then(
       (value) {
         if (value.startsWith("ey")) {
           TokenManager.setToken(value).then((_) {
@@ -76,6 +92,7 @@ class _LoginState extends ConsumerState<Login> {
 
   TextEditingController telefonController = TextEditingController();
   TextEditingController parolaController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     isLoggedIn = ref.watch(authProvider);
@@ -93,7 +110,7 @@ class _LoginState extends ConsumerState<Login> {
               height: 15,
             ),
             isLoggedIn == 0
-                ? Wrap(
+                ? Column(
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -116,19 +133,40 @@ class _LoginState extends ConsumerState<Login> {
                         ],
                       ),
                       const SizedBox(
+                        height: 10,
+                      ),
+                      SwitchListTile(
+                        title: const Text("Halısaha Hesabı"),
+                        value: isOwner,
+                        onChanged: (checked) {
+                          setState(() {
+                            isOwner = checked;
+                          });
+                        },
+                      ),
+                      const SizedBox(
                         height: 15,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton(
-                            onPressed: _resetPasswordModal,
+                            onPressed: _register,
                             child: const Text("Hesabınız yok mu ?"),
+                          ),
+                          const SizedBox(
+                            height: 10,
                           ),
                           CustomButton(
                             icon: Icons.sports_volleyball,
                             buttonText: "Giriş Yap",
-                            onPressed: login,
+                            onPressed: (){
+                              if(isOwner){
+                                loginOwner();
+                              }else{
+                                loginPlayer();
+                              }
+                            },
                           )
                         ],
                       ),

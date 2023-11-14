@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/providers/auth_provider.dart';
 import 'package:halisaha_app/screens/login.dart';
@@ -14,7 +13,8 @@ final theme = ThemeData(
     brightness: Brightness.light,
     seedColor: const Color.fromARGB(255, 1, 147, 50),
   ),
-  textTheme: GoogleFonts.latoTextTheme(),
+  // textTheme: GoogleFonts.latoTextTheme(Typography.dense2021),
+  // textTheme: GoogleFonts.aBeeZeeTextTheme(),
 );
 
 void main() => runApp(const ProviderScope(child: MyApp()));
@@ -47,8 +47,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     isLoggedIn = ref.watch(authProvider);
-    TokenManager.getToken().then((value){
-      print(value);
+    TokenManager.getToken().then((value) {
+      print("token: $value");
     });
     return MaterialApp(
       title: "Halısaha App",
@@ -69,7 +69,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             isLoggedIn == 2
                 ? IconButton(
                     onPressed: () {
-                      AuthService.logout().then(
+                      AuthService().logout().then(
                         (value) {
                           ref.read(authProvider.notifier).auth(0);
                         },
