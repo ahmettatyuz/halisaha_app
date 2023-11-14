@@ -10,3 +10,14 @@ class AuthNotifier extends StateNotifier<int> {
 final authProvider = StateNotifierProvider<AuthNotifier,int>((ref) {
   return AuthNotifier();
 });
+
+class RoleNotifier extends StateNotifier<bool> {
+  RoleNotifier(): super(false);
+  bool changeRole(bool role){
+    state = role;
+    return role;
+  }
+}
+final roleProvider = StateNotifierProvider<RoleNotifier,bool>((ref) {
+  return RoleNotifier();
+});

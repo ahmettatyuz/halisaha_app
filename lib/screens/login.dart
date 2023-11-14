@@ -95,6 +95,7 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   Widget build(BuildContext context) {
+    isOwner = ref.watch(roleProvider);
     isLoggedIn = ref.watch(authProvider);
     return SingleChildScrollView(
       child: Padding(
@@ -139,9 +140,8 @@ class _LoginState extends ConsumerState<Login> {
                         title: const Text("Halısaha Hesabı"),
                         value: isOwner,
                         onChanged: (checked) {
-                          setState(() {
-                            isOwner = checked;
-                          });
+                          ref.read(roleProvider.notifier).changeRole(checked);
+                          // ref.read(roleProvider.notifier) = checked;
                         },
                       ),
                       const SizedBox(
@@ -160,10 +160,10 @@ class _LoginState extends ConsumerState<Login> {
                           CustomButton(
                             icon: Icons.sports_volleyball,
                             buttonText: "Giriş Yap",
-                            onPressed: (){
-                              if(isOwner){
+                            onPressed: () {
+                              if (isOwner) {
                                 loginOwner();
-                              }else{
+                              } else {
                                 loginPlayer();
                               }
                             },

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/custom/custom_text_field.dart';
 import 'package:halisaha_app/custom/helpers.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/providers/auth_provider.dart';
 import 'package:halisaha_app/services/user_service.dart';
 
-class Register extends StatefulWidget {
+class Register extends ConsumerStatefulWidget {
   const Register({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  ConsumerState<Register> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterState extends ConsumerState<Register> {
   bool isOwner = false;
   double paddingValue = 20.0;
   TextEditingController adSoyadController = TextEditingController();
@@ -99,6 +101,7 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    isOwner = ref.watch(roleProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -136,9 +139,7 @@ class _RegisterState extends State<Register> {
               title: const Text("Halısaha sahibi misiniz ? "),
               value: isOwner,
               onChanged: (checked) {
-                setState(() {
-                  isOwner = checked;
-                });
+                ref.read(roleProvider.notifier).changeRole(checked);
               },
             ),
             const SizedBox(
