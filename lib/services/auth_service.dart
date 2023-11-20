@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:halisaha_app/global/constants/constants.dart';
-import 'package:halisaha_app/models/token_manager.dart';
 
 class AuthService {
   Future<String> loginOwnerRequest(String phone, String password) async {
@@ -47,11 +46,4 @@ class AuthService {
     }
   }
 
-  Future<void> logout() async {
-    try {
-      await TokenManager.setToken("null");
-    } catch (e) {
-      print(e);
-    }
-  }
 }

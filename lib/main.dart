@@ -10,9 +10,11 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/view/screens/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
 import 'package:halisaha_app/view/screens/profile.dart';
+import 'package:halisaha_app/view/screens/rezervasyonlar.dart';
 import 'package:halisaha_app/view/widgets/bottom_navigation.dart';
 import 'package:halisaha_app/view/widgets/modal_bottom.dart';
 
@@ -72,7 +74,7 @@ class _MainState extends ConsumerState<Main> {
   final ownerService = OwnerService();
   Widget activeScreen = const Login();
   String screen = "";
-  
+
   void showModalBottom() {
     showModalBottomSheet<void>(
         // isScrollControlled: true,
@@ -110,9 +112,12 @@ class _MainState extends ConsumerState<Main> {
       activeScreen = const Home();
     } else if (screen == "profil") {
       activeScreen = const Profile();
+    } else if (screen == "halisahalar") {
+      activeScreen = const Halisahalar();
+    } else if (screen == "rezervasyonlar") {
+      activeScreen = const Rezervasyonlar();
     }
   }
-
 
   @override
   void initState() {
@@ -129,6 +134,7 @@ class _MainState extends ConsumerState<Main> {
       print("token: $value");
     });
     return Scaffold(
+      floatingActionButton: screen=="rezervasyonlar" ? IconButton(icon:const Icon(Icons.add),onPressed: (){},iconSize: 35,):null,
       appBar: AppBar(
         title: const Text(
           "HALISAHA KRALI",
