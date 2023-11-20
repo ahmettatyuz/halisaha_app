@@ -1,15 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthNotifier extends StateNotifier<int> {
-  AuthNotifier(): super(0);
-  int auth(int status){
-    state = status;
-    return status;
+class ScreenNotifier extends StateNotifier<String> {
+  ScreenNotifier(): super("login");
+  String setScreen(String activeScreen){
+    state = activeScreen;
+    return activeScreen;
   }
 }
-final authProvider = StateNotifierProvider<AuthNotifier,int>((ref) {
-  return AuthNotifier();
+
+final screenProvider = StateNotifierProvider<ScreenNotifier,String>((ref) {
+  return ScreenNotifier();
 });
+
+
 
 class RoleNotifier extends StateNotifier<bool> {
   RoleNotifier(): super(false);

@@ -1,11 +1,18 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print, prefer_interpolation_to_compose_strings
+
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halisaha_app/custom/custom_button.dart.dart';
-import 'package:halisaha_app/custom/custom_text_field.dart';
+import 'package:halisaha_app/global/providers/screen_provider.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
+import 'package:halisaha_app/models/user.dart';
+import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/view/custom/custom_button.dart.dart';
+import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/models/token_manager.dart';
-import 'package:halisaha_app/providers/auth_provider.dart';
 import 'package:halisaha_app/services/auth_service.dart';
-import 'package:halisaha_app/screens/register.dart';
+import 'package:halisaha_app/view/custom/helpers.dart';
+import 'package:halisaha_app/view/screens/register.dart';
 
 class Login extends ConsumerStatefulWidget {
   const Login({super.key});
@@ -14,81 +21,68 @@ class Login extends ConsumerStatefulWidget {
 }
 
 class _LoginState extends ConsumerState<Login> {
-  int isLoggedIn = 0;
+  bool isLoggingIn = false;
   bool isOwner = false;
+  final ownerService = OwnerService();
   void _register() {
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
       return const Register();
     }));
   }
 
-  void loginOwner() {
+  void loginOwner() async {
     String phone = "5${telefonController.text}";
     String password = parolaController.text;
-    ref.read(authProvider.notifier).auth(1);
-    AuthService().loginOwnerRequest(phone, password).then(
-      (value) {
-        if (value.startsWith("ey")) {
-          TokenManager.setToken(value).then((_) {
-            ref.read(authProvider.notifier).auth(2);
-          });
-        } else {
-          ref.read(authProvider.notifier).auth(0);
-          showDialog(
-            context: context,
-            builder: (ctx) {
-              return AlertDialog(
-                title: const Text("Uyarı"),
-                content: Text(value.toString()),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Tamam"),
-                  ),
-                ],
-              );
-            },
-          );
+    isLoggingIn = true;
+    try {
+      String token = await AuthService().loginOwnerRequest(phone, password);
+      if (TokenManager.verifyToken(token)) {
+        TokenManager.token = token;
+        final user = User.fromJson(JWT.decode(token).payload);
+        ref.read(userProvider.notifier).userState(user);
+        if (user.role == "owner") {
+          final owner = await ownerService.getOwnerById(user.id!);
+          ref.read(ownerProvider.notifier).ownerState(owner);
+          print("login ekranından manuel giriş");
+          print("telefon :" + owner.phone.toString());
         }
-      },
-    );
+        
+        await TokenManager.setToken(token);
+        ref.read(screenProvider.notifier).setScreen("home");
+      } else {
+        ref.read(screenProvider.notifier).setScreen("login");
+        messageBox(context, "Uyarı", token.toString(), "Tamam");
+      }
+    } catch (e) {
+      ref.read(screenProvider.notifier).setScreen("login");
+      messageBox(context, "Uyarı", e.toString(), "Tamam");
+    }
+
+    setState(() {
+          isLoggingIn=false;
+        });
   }
 
-  void loginPlayer() {
-    String phone = "5${telefonController.text}";
-    String password = parolaController.text;
-    ref.read(authProvider.notifier).auth(1);
-    AuthService().loginPlayerRequest(phone, password).then(
-      (value) {
-        if (value.startsWith("ey")) {
-          TokenManager.setToken(value).then((_) {
-            ref.read(authProvider.notifier).auth(2);
-          });
-        } else {
-          ref.read(authProvider.notifier).auth(0);
-          showDialog(
-            context: context,
-            builder: (ctx) {
-              return AlertDialog(
-                title: const Text("Uyarı"),
-                content: Text(value.toString()),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Tamam"),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      },
-    );
-  }
+  // void loginPlayer() {
+  //   String phone = "5${telefonController.text}";
+  //   String password = parolaController.text;
+  //   ref.read(screenProvider.notifier).auth(1);
+  //   AuthService().loginPlayerRequest(phone, password).then(
+  //     (value) {
+  //       if (value.startsWith("ey")) {
+  //         TokenManager.setToken(value).then((_) {
+  //           ref.read(authProvider.notifier).auth(2);
+  //         });
+  //       } else {
+  //         ref.read(authProvider.notifier).auth(0);
+  //         messageBox(context, "Uyarı", value.toString(), "Tamam");
+  //       }
+  //     },
+  //   ).catchError((e) {
+  //     ref.read(authProvider.notifier).auth(0);
+  //     messageBox(context, "Uyarı", e.toString(), "Tamam");
+  //   });
+  // }
 
   TextEditingController telefonController = TextEditingController();
   TextEditingController parolaController = TextEditingController();
@@ -96,7 +90,6 @@ class _LoginState extends ConsumerState<Login> {
   @override
   Widget build(BuildContext context) {
     isOwner = ref.watch(roleProvider);
-    isLoggedIn = ref.watch(authProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -110,7 +103,7 @@ class _LoginState extends ConsumerState<Login> {
             const SizedBox(
               height: 15,
             ),
-            isLoggedIn == 0
+            !isLoggingIn
                 ? Column(
                     children: [
                       Column(
@@ -164,7 +157,7 @@ class _LoginState extends ConsumerState<Login> {
                               if (isOwner) {
                                 loginOwner();
                               } else {
-                                loginPlayer();
+                                // loginPlayer();
                               }
                             },
                           )

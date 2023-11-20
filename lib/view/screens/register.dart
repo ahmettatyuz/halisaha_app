@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halisaha_app/custom/custom_text_field.dart';
-import 'package:halisaha_app/custom/helpers.dart';
+import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/view/custom/custom_text_field.dart';
+import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/models/owner.dart';
-import 'package:halisaha_app/providers/auth_provider.dart';
+import 'package:halisaha_app/global/providers/auth_provider.dart';
 import 'package:halisaha_app/services/user_service.dart';
 
 class Register extends ConsumerStatefulWidget {
@@ -42,8 +43,8 @@ class _RegisterState extends ConsumerState<Register> {
         eposta.isNotEmpty &&
         parola1.isNotEmpty) {
       if (parola1 == parola2) {
-        UserService()
-            .registerOwnerRequest(
+        OwnerService()
+            .register(
                 parola1, adSoyad, eposta, telefon, selectedCity, adres,isyeri,webAdres)
             .then((value) {
           if (value[0] == "200") {

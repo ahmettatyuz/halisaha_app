@@ -1,19 +1,45 @@
-class Owner {
-  int id;
-  String password;
-  String pitchName;
-  String ownerFirstName;
-  String ownerLastName;
-  String mail;
-  String web;
-  String phone;
-  String city;
-  String address;
-  int point;
-  String coordinate1;
-  String coordinate2;
-  DateTime createDate;
+// To parse this JSON data, do
+//
+//     final owner = ownerFromJson(jsonString);
 
+import 'dart:convert';
+
+Owner ownerFromJson(String str) => Owner.fromJson(json.decode(str));
+
+String ownerToJson(Owner data) => json.encode(data.toJson());
+
+class Owner {
+  int? id;
+  String? password;
+  String? pitchName;
+  String? ownerFirstName;
+  String? ownerLastName;
+  String? mail;
+  String? web;
+  String? phone;
+  String? city;
+  String? address;
+  int? point;
+  String? coordinate1;
+  String? coordinate2;
+  DateTime? createDate;
+
+  Owner({
+    this.id,
+    this.password,
+    this.pitchName,
+    this.ownerFirstName,
+    this.ownerLastName,
+    this.mail,
+    this.web,
+    this.phone,
+    this.city,
+    this.address,
+    this.point,
+    this.coordinate1,
+    this.coordinate2,
+    this.createDate,
+  });
   static Map<String, String> turkishCities = {
     '01': 'Adana',
     '02': 'Adıyaman',
@@ -98,20 +124,37 @@ class Owner {
     '81': 'Düzce',
   };
 
-  Owner({
-    required this.id,
-    required this.password,
-    required this.pitchName,
-    required this.ownerFirstName,
-    required this.ownerLastName,
-    required this.mail,
-    required this.web,
-    required this.phone,
-    required this.city,
-    required this.address,
-    required this.point,
-    required this.coordinate1,
-    required this.coordinate2,
-    required this.createDate,
-  });
+  factory Owner.fromJson(Map<String, dynamic> json) => Owner(
+        id: json["id"],
+        password: json["password"],
+        pitchName: json["pitchName"],
+        ownerFirstName: json["ownerFirstName"],
+        ownerLastName: json["ownerLastName"],
+        mail: json["mail"],
+        web: json["web"],
+        phone: json["phone"],
+        city: json["city"],
+        address: json["address"],
+        point: json["point"],
+        coordinate1: json["coordinate1"],
+        coordinate2: json["coordinate2"],
+        createDate: DateTime.parse(json["createDate"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "password": password,
+        "pitchName": pitchName,
+        "ownerFirstName": ownerFirstName,
+        "ownerLastName": ownerLastName,
+        "mail": mail,
+        "web": web,
+        "phone": phone,
+        "city": city,
+        "address": address,
+        "point": point,
+        "coordinate1": coordinate1,
+        "coordinate2": coordinate2,
+        "createDate": createDate.toString(),
+      };
 }

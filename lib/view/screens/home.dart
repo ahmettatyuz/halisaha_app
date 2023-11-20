@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Tabs extends StatefulWidget {
-  const Tabs({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
   @override
-  State<Tabs> createState() => _TabsState();
+  State<Home> createState() => _HomeState();
 }
 
 Future<String?> getToken() async {
@@ -13,20 +13,24 @@ Future<String?> getToken() async {
   return prefs.getString('jwt_token');
 }
 
-class _TabsState extends State<Tabs> {
+class _HomeState extends State<Home> {
+
   String token = "";
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
+          const Text(
+            "Hoşgeldin",
+            style: TextStyle(fontSize: 25),
+          ),
           Text(token),
           ElevatedButton(
-            onPressed: () {
-              TokenManager.getToken().then((value) {
-                setState(() {
-                  token = value.toString();
-                });
+            onPressed: () async {
+              String? value = await TokenManager.getToken();
+              setState(() {
+                token = value.toString();
               });
             },
             child: const Text("tıkla"),
