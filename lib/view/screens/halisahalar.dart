@@ -9,11 +9,14 @@ class Halisahalar extends ConsumerStatefulWidget {
 }
 
 class _HalisahalarState extends ConsumerState<Halisahalar> {
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text("Halısahalar ekranı"),
+    return Center(
+      child: Text(
+        "Halısahalar ekranı",
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+      ),
     );
   }
 }

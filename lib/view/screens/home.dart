@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
             "Hoşgeldin",

@@ -2,7 +2,6 @@ import 'package:halisaha_app/global/constants/constants.dart';
 import 'package:halisaha_app/models/owner.dart';
 
 class OwnerService {
-
   Future<Owner> getOwnerById(String id) async {
     final response = await dio.get("$API_BASEURL/api/owner/$id");
     print(response.statusCode);
@@ -14,18 +13,17 @@ class OwnerService {
   }
 
   Future<List<String>> register(
-      String parola,
-      String adSoyad,
-      String eposta,
-      String telefon,
-      String selectedCity,
-      String adres,
-      String isYeri,
-      String webAdres,
-      ) async {
+    String parola,
+    String adSoyad,
+    String eposta,
+    String telefon,
+    String selectedCity,
+    String adres,
+    String isYeri,
+    String webAdres,
+  ) async {
     try {
-      final response =
-          await dio.post("$API_BASEURL/api/owner/register", data: {
+      final response = await dio.post("$API_BASEURL/api/owner/register", data: {
         "password": parola,
         "pitchName": isYeri,
         "ownerFirstName": adSoyad,
@@ -46,6 +44,58 @@ class OwnerService {
     }
   }
 
-  
-}
+  Future<Owner> update(int id, String ad, String phone, String city,
+      String mail, String isyeri, String adres, String web, int point) async {
+    try {
+      final response = await dio.put("$API_BASEURL/api/owner", data: {
+        "id": id,
+        "password": "a",
+        "pitchName": isyeri,
+        "ownerFirstName": ad,
+        "ownerLastName": "string",
+        "mail": mail,
+        "web": web,
+        "phone": phone,
+        "city": city,
+        "address": adres,
+        "point": point,
+        "coordinate1": "string",
+        "coordinate2": "string",
+        "createDate": "2023-11-14T19:43:21.916Z"
+      });
+      print(response.data);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return Owner.fromJson(response.data);
+      } else {
+        throw ("İşlem başarısız.");
+      }
+    } catch (e) {
+      throw ("İşlem başarısız.");
+    }
+  }
 
+  Future<void> changePassword(
+      int id, String oldPassword, String newPassword) async {
+    try {
+      final response = await dio.put("$API_BASEURL/api/owner/password", data: {
+        "id": id,
+        "oldPassword": oldPassword,
+        "password":newPassword
+      });
+
+      if(response.statusCode!=200){
+        throw (response.data);
+      }
+      print({
+        "id": id,
+        "oldPassword": "a",
+        "password":newPassword
+      });
+      print(response.data);
+      print(response.statusCode);
+    } catch (e) {
+      throw (e);
+    }
+  }
+}

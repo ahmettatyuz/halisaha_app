@@ -13,7 +13,8 @@ import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/screens/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
-import 'package:halisaha_app/view/screens/profile.dart';
+import 'package:halisaha_app/view/screens/profile/edit-profile.dart';
+import 'package:halisaha_app/view/screens/profile/profile.dart';
 import 'package:halisaha_app/view/screens/rezervasyonlar.dart';
 import 'package:halisaha_app/view/widgets/bottom_navigation.dart';
 import 'package:halisaha_app/view/widgets/modal_bottom.dart';
@@ -116,6 +117,8 @@ class _MainState extends ConsumerState<Main> {
       activeScreen = const Halisahalar();
     } else if (screen == "rezervasyonlar") {
       activeScreen = const Rezervasyonlar();
+    } else if (screen == "bilgileriDuzenle") {
+      activeScreen = const EditProfile();
     }
   }
 
@@ -134,7 +137,13 @@ class _MainState extends ConsumerState<Main> {
       print("token: $value");
     });
     return Scaffold(
-      floatingActionButton: screen=="rezervasyonlar" ? IconButton(icon:const Icon(Icons.add),onPressed: (){},iconSize: 35,):null,
+      floatingActionButton: screen == "rezervasyonlar"
+          ? IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () {},
+              iconSize: 35,
+            )
+          : null,
       appBar: AppBar(
         title: const Text(
           "HALISAHA KRALI",

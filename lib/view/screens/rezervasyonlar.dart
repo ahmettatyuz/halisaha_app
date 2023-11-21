@@ -12,8 +12,12 @@ class _RezervasyonlarState extends ConsumerState<Rezervasyonlar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text("Rezervasyonlar"),
+    return Center(
+      child: Text(
+        "Rezervasyonlar ekranı",
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+      ),
     );
   }
 }

@@ -5,6 +5,8 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/view/screens/profile/change-password.dart';
+import 'package:halisaha_app/view/screens/profile/edit-profile.dart';
 import 'package:halisaha_app/view/widgets/profile_item.dart';
 
 class Profile extends ConsumerStatefulWidget {
@@ -75,16 +77,20 @@ class _ProfileState extends ConsumerState<Profile> {
             height: height,
           ),
           ProfileItem(
-              icon: Icons.password,
-              label: "Parola Değiştir",
-              onPressedFunction: () {}),
+              icon: Icons.edit,
+              label: "Bilgileri Düzenle",
+              onPressedFunction: () {
+                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const EditProfile()));
+              },),
           SizedBox(
             height: height,
           ),
           ProfileItem(
-              icon: Icons.edit,
-              label: "Bilgileri Düzenle",
-              onPressedFunction: () {}),
+              icon: Icons.password,
+              label: "Parola Değiştir",
+              onPressedFunction: () {
+                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ChangePassword()));
+              }),
           SizedBox(
             height: height,
           ),
@@ -101,7 +107,7 @@ class _ProfileState extends ConsumerState<Profile> {
               ],
             ),
           ProfileItem(
-            color: "red",
+              color: "red",
               icon: Icons.logout,
               label: "Çıkış Yap",
               onPressedFunction: () async {

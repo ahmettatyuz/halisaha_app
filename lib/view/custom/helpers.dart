@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-void messageBox(
-    BuildContext context, String title, String message, String button) {
-  showDialog(
+Future<void> messageBox(BuildContext context, String title, String message, String button) async {
+  await showDialog(
     context: context,
     builder: (ctx) {
       return AlertDialog(
