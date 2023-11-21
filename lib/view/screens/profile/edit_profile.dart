@@ -68,8 +68,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         title: Text(
           "Bilgileri Düzenle",
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryColor),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor
+              ),
         ),
       ),
       body: SingleChildScrollView(

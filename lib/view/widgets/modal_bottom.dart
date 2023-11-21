@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/models/token_manager.dart';
-import 'package:halisaha_app/services/auth_service.dart';
 
 class ModalBottom extends ConsumerStatefulWidget {
   const ModalBottom({super.key});
@@ -21,7 +20,7 @@ class _ModalBottomState extends ConsumerState<ModalBottom> {
         children: [
           TextButton.icon(
             onPressed: () {
-              ref.read(screenProvider.notifier).setScreen("profil");
+              ref.read(screenProvider.notifier).setScreen("profile");
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.person),

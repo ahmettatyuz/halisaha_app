@@ -1,5 +1,4 @@
-// ignore_for_file: avoid_print
-
+// ignore_for_file: avoid_print, prefer_interpolation_to_compose_strings
 import 'dart:io';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import "package:flutter/material.dart";
@@ -13,7 +12,6 @@ import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/screens/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
-import 'package:halisaha_app/view/screens/profile/edit-profile.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
 import 'package:halisaha_app/view/screens/rezervasyonlar.dart';
 import 'package:halisaha_app/view/widgets/bottom_navigation.dart';
@@ -111,14 +109,12 @@ class _MainState extends ConsumerState<Main> {
       activeScreen = const Login();
     } else if (screen == "home") {
       activeScreen = const Home();
-    } else if (screen == "profil") {
+    } else if (screen == "profile") {
       activeScreen = const Profile();
     } else if (screen == "halisahalar") {
       activeScreen = const Halisahalar();
     } else if (screen == "rezervasyonlar") {
       activeScreen = const Rezervasyonlar();
-    } else if (screen == "bilgileriDuzenle") {
-      activeScreen = const EditProfile();
     }
   }
 
@@ -137,13 +133,6 @@ class _MainState extends ConsumerState<Main> {
       print("token: $value");
     });
     return Scaffold(
-      floatingActionButton: screen == "rezervasyonlar"
-          ? IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {},
-              iconSize: 35,
-            )
-          : null,
       appBar: AppBar(
         title: const Text(
           "HALISAHA KRALI",
