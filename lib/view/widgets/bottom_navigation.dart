@@ -32,7 +32,7 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
       currentIndex: _currentIndex,
       type: BottomNavigationBarType.fixed,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Ana Ekran"),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Akış"),
         BottomNavigationBarItem(
           icon: Icon(Icons.stadium),
           label: "Halısaha Bul",

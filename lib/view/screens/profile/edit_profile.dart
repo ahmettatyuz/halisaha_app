@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
+import 'package:toastification/toastification.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key});
@@ -32,10 +32,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         owner.point!,
       );
       ref.read(ownerProvider.notifier).ownerState(result);
-      await messageBox(context, "Uyarı", "Bilgileriniz güncellendi.", "Tamam");
+      toast(context, "PROFİL", "Profiliniz güncellendi",
+          ToastificationType.success, 2, Icons.check);
+      // await messageBox(context, "Uyarı", "Bilgileriniz güncellendi.", "Tamam");
       Navigator.pop(context);
     } catch (e) {
-      messageBox(context, "Uyarı", e.toString(), "Tamam");
+      toast(context, "PROFİL", "İşlem başarısız",
+          ToastificationType.error, 2, Icons.error);
     }
   }
 
@@ -68,9 +71,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         title: Text(
           "Bilgileri Düzenle",
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor
-              ),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor),
         ),
       ),
       body: SingleChildScrollView(

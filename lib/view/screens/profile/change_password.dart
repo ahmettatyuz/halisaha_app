@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
@@ -6,6 +8,7 @@ import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
+import 'package:toastification/toastification.dart';
 
 class ChangePassword extends ConsumerStatefulWidget {
   const ChangePassword({super.key});
@@ -22,10 +25,12 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
       if (pw1 == pw2 && pw1.isNotEmpty) {
         await ownerService.changePassword(ref.watch(ownerProvider).id!,
             parola0Controller.text, parola1Controller.text);
-        await messageBox(context, "Uyarı", "Parolanız değiştirildi.", "Tamam");
+        toast(context, "PROFİL", "Parolanız değiştirildi.",
+          ToastificationType.success, 2, Icons.check);
         Navigator.pop(context);
       } else {
-        messageBox(context, "Uyarı", "Parolalar uyuşmuyor.", "Tamam");
+        toast(context, "PROFİL", "Parolalar uyuşmuyor.",
+          ToastificationType.error, 2, Icons.error);
       }
     } catch (e) {
       await messageBox(context, "Uyarı", e.toString(), "Tamam");

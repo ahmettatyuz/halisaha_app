@@ -121,7 +121,6 @@ class _MainState extends ConsumerState<Main> {
   @override
   void initState() {
     super.initState();
-
     loginCheck();
   }
 

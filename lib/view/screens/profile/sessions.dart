@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
-import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/session.dart';
-import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/widgets/add_session.dart';
 import 'package:halisaha_app/view/widgets/session_card.dart';
 
@@ -15,29 +13,43 @@ class SessionEdit extends ConsumerStatefulWidget {
 }
 
 class _SessionEditState extends ConsumerState<SessionEdit> {
-  bool state=true;
+  bool state = true;
   void sessionModal() {
     showModalBottomSheet<void>(
       useSafeArea: true,
       context: context,
-      builder: (ctx) => AddSession(refresh: refresh,),
+      builder: (ctx) => AddSession(),
     );
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-  
-  void refresh(){
-    setState(() {
-      
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    state = ref.watch(sessionsProvider);
+    List<Session> sessions = ref.watch(sessionsProvider);
+    Widget activeScreen = Center(
+      child: Text(
+        "Hiç seans yok !",
+        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
+      ),
+    );
+    if (sessions.isNotEmpty && sessions[0].id != null) {
+      activeScreen = ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: sessions.length,
+        itemBuilder: (BuildContext context, int index) {
+          Session session = sessions[index];
+          if (session.id != null) {
+            return SessionCard(
+              id: session.id!,
+              time: session.sessionTime!,
+              index: index,
+            );
+          }
+        },
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,35 +60,10 @@ class _SessionEditState extends ConsumerState<SessionEdit> {
               ),
         ),
       ),
-      body: FutureBuilder<List<Session>>(
-        future: SessionService().getSession(ref.watch(ownerProvider).id!),
-        builder: (context, snapshot) {
-          if (state && snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return SingleChildScrollView(
-              child: Column(
-                children: snapshot.data!
-                    .map((e) => SessionCard(time: e.sessionTime!, id: e.id!))
-                    .toList(),
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data!.isEmpty) {
-            return Center(
-              child: Text(
-                "Hiç seans eklenmemiş !",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+      body: activeScreen,
       floatingActionButton: IconButton(
         icon: const Icon(Icons.add),
-        onPressed: (){
+        onPressed: () {
           sessionModal();
         },
         style: IconButton.styleFrom(

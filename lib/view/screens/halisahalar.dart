@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halisaha_app/global/providers/owners_provider.dart';
+import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/view/widgets/owner_card.dart';
 
 class Halisahalar extends ConsumerStatefulWidget {
   const Halisahalar({super.key});
@@ -11,12 +14,37 @@ class Halisahalar extends ConsumerStatefulWidget {
 class _HalisahalarState extends ConsumerState<Halisahalar> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    Widget activeScreen = Center(
       child: Text(
-        "Halısahalar ekranı",
+        "Hiç seans yok !",
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColor,
+            ),
       ),
+    );
+    List<Owner> owners = ref.watch(ownersProvider);
+    if (owners.isNotEmpty && owners[0].id == null) {
+      ref.read(ownersProvider.notifier).fetchAllOwners();
+    }
+    for (var element in owners) {
+      print(element.pitchName);
+    }
+    if (owners.isNotEmpty && owners[0].id != null) {
+      activeScreen = ListView.builder(
+        itemCount: owners.length,
+        itemBuilder: (BuildContext context, int index) {
+          return OwnerCard(
+            owner: owners[index],
+          );
+        },
+      );
+    }
+    return RefreshIndicator(
+      child: activeScreen,
+      onRefresh: () async {
+        ref.read(ownersProvider.notifier).fetchAllOwners();
+      },
     );
   }
 }

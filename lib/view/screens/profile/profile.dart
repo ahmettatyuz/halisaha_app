@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
+import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/token_manager.dart';
@@ -32,6 +33,9 @@ class _ProfileState extends ConsumerState<Profile> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          SizedBox(
+            height: height*2,
+          ),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -109,6 +113,12 @@ class _ProfileState extends ConsumerState<Profile> {
                   icon: Icons.sports_soccer,
                   label: "Seansları Düzenle",
                   onPressedFunction: () {
+                    if (ref.watch(sessionsProvider).isNotEmpty &&
+                        ref.watch(sessionsProvider)[0].id == null) {
+                      ref
+                          .read(sessionsProvider.notifier)
+                          .fetchSessions(owner.id!);
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(

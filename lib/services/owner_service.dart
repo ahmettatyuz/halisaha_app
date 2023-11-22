@@ -3,12 +3,16 @@ import 'package:halisaha_app/models/owner.dart';
 
 class OwnerService {
   Future<Owner> getOwnerById(String id) async {
-    final response = await dio.get("$API_BASEURL/api/owner/$id");
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      return Owner.fromJson(response.data);
-    } else {
-      throw (response.data);
+    try {
+      final response = await dio.get("$API_BASEURL/api/owner/$id");
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return Owner.fromJson(response.data);
+      } else {
+        throw (response.data);
+      }
+    } catch (e) {
+      throw (e.toString());
     }
   }
 
@@ -81,19 +85,30 @@ class OwnerService {
       final response = await dio.put("$API_BASEURL/api/owner/password", data: {
         "id": id,
         "oldPassword": oldPassword,
-        "password":newPassword
+        "password": newPassword
       });
 
-      if(response.statusCode!=200){
+      if (response.statusCode != 200) {
         throw (response.data);
       }
-      print({
-        "id": id,
-        "oldPassword": "a",
-        "password":newPassword
-      });
+      print({"id": id, "oldPassword": "a", "password": newPassword});
       print(response.data);
       print(response.statusCode);
+    } catch (e) {
+      throw (e);
+    }
+  }
+
+  Future<List<Owner>> getAllOwners() async {
+    try {
+      final response =
+          await dio.get("$API_BASEURL/api/owner");
+
+      if (response.statusCode != 200) {
+        throw (response.data);
+      }
+      List<dynamic> json = response.data;
+      return json.map((e) => Owner.fromJson(e)).toList();
     } catch (e) {
       throw (e);
     }
