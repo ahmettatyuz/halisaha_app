@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/view/screens/halisaha/halisaha_detay.dart';
 
 class OwnerCard extends ConsumerStatefulWidget {
   const OwnerCard({super.key, required this.owner});
@@ -20,7 +21,7 @@ class _OwnerCardState extends ConsumerState<OwnerCard> {
           children: [
             InkWell(
               onTap: () {
-                print("tıklandı");
+                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> Halisaha(owner: widget.owner)));
               },
               child: Column(
                 children: [

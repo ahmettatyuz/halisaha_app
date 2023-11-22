@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/owners_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
-import 'package:halisaha_app/view/widgets/owner_card.dart';
+import 'package:halisaha_app/view/widgets/halisaha_card.dart';
 
 class Halisahalar extends ConsumerStatefulWidget {
   const Halisahalar({super.key});
@@ -16,7 +16,7 @@ class _HalisahalarState extends ConsumerState<Halisahalar> {
   Widget build(BuildContext context) {
     Widget activeScreen = Center(
       child: Text(
-        "Hiç seans yok !",
+        "Şehirnde kayıtlı hiç halısaha yok !",
         style: Theme.of(context).textTheme.titleLarge!.copyWith(
               fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,

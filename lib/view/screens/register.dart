@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
@@ -27,6 +33,48 @@ class _RegisterState extends ConsumerState<Register> {
   TextEditingController parola1Controller = TextEditingController();
   TextEditingController parola2Controller = TextEditingController();
 
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+  double latitude = 0;
+  double longitude = 0;
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
+
   void _registerOwner() async {
     String message = "";
     String adSoyad = adSoyadController.text;
@@ -44,8 +92,8 @@ class _RegisterState extends ConsumerState<Register> {
         parola1.isNotEmpty) {
       if (parola1 == parola2) {
         OwnerService()
-            .register(
-                parola1, adSoyad, eposta, telefon, selectedCity, adres,isyeri,webAdres)
+            .register(parola1, adSoyad, eposta, telefon, selectedCity, adres,
+                isyeri, webAdres)
             .then((value) {
           if (value[0] == "200") {
             Navigator.pop(context);
@@ -98,6 +146,15 @@ class _RegisterState extends ConsumerState<Register> {
     if (message != "") {
       messageBox(context, "Uyaro", message, "Tamam");
     }
+  }
+
+  Future<void> _goToLocation(LatLng positon) async {
+    final GoogleMapController controller = await _mapController.future;
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: positon, zoom: 16),
+      ),
+    );
   }
 
   @override
@@ -197,12 +254,14 @@ class _RegisterState extends ConsumerState<Register> {
                           .toList(),
                       value: selectedCity,
                       onChanged: (value) {
-                        setState(() {
-                          selectedCity = value!;
-                        });
+                        setState(
+                          () {
+                            selectedCity = value!;
+                          },
+                        );
                       },
                     ),
-                    const Icon(Icons.location_city)
+                    const Icon(Icons.location_city),
                   ],
                 ),
               ),
@@ -268,8 +327,52 @@ class _RegisterState extends ConsumerState<Register> {
                     "Halısaha Bilgileri",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(),
                   ),
+                  SingleChildScrollView(
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      width: MediaQuery.of(context).size.width - 40,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: GoogleMap(
+                        gestureRecognizers: {
+                          Factory<OneSequenceGestureRecognizer>(
+                              () => EagerGestureRecognizer())
+                        },
+                        mapType: MapType.normal,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(latitude, longitude),
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _mapController.complete(controller);
+                        },
+                        myLocationButtonEnabled: false,
+                        myLocationEnabled: false,
+                        scrollGesturesEnabled: true,
+                      ),
+                    ),
+                  ),
                   const SizedBox(
-                    height: 5,
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          _determinePosition().then((value) {
+                            _goToLocation(
+                                LatLng(value.latitude, value.longitude));
+                          });
+                        },
+                        icon: const Icon(Icons.location_on),
+                        label: const Text("Konumu Bul"),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: paddingValue),
@@ -285,7 +388,7 @@ class _RegisterState extends ConsumerState<Register> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: paddingValue),
                     child: CustomTextField(
-                      hintText: "Halısaha Adresi",
+                      hintText: "Halısaha Adres Tarifi",
                       controller: adresController,
                       icon: Icons.location_on,
                     ),
@@ -307,10 +410,10 @@ class _RegisterState extends ConsumerState<Register> {
                 ],
               ),
             ElevatedButton.icon(
-              onPressed: (){
-                if(isOwner){
+              onPressed: () {
+                if (isOwner) {
                   _registerOwner();
-                }else{
+                } else {
                   _registerPlayer();
                 }
               },

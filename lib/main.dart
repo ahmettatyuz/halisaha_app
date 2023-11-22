@@ -9,7 +9,7 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
-import 'package:halisaha_app/view/screens/halisahalar.dart';
+import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
