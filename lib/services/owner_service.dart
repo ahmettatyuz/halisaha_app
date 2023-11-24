@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:halisaha_app/global/constants/constants.dart';
 import 'package:halisaha_app/models/owner.dart';
 
@@ -17,17 +18,16 @@ class OwnerService {
   }
 
   Future<List<String>> register(
-    String parola,
-    String adSoyad,
-    String eposta,
-    String telefon,
-    String selectedCity,
-    String adres,
-    String isYeri,
-    String webAdres,
-    String coordinate1,
-    String coordinate2
-  ) async {
+      String parola,
+      String adSoyad,
+      String eposta,
+      String telefon,
+      String selectedCity,
+      String adres,
+      String isYeri,
+      String webAdres,
+      String coordinate1,
+      String coordinate2) async {
     try {
       final response = await dio.post("$API_BASEURL/api/owner/register", data: {
         "password": parola,
@@ -50,8 +50,18 @@ class OwnerService {
     }
   }
 
-  Future<Owner> update(int id, String ad, String phone, String city,
-      String mail, String isyeri, String adres, String web, int point, String coordinate1,String coordinate2) async {
+  Future<Owner> update(
+      int id,
+      String ad,
+      String phone,
+      String city,
+      String mail,
+      String isyeri,
+      String adres,
+      String web,
+      int point,
+      String coordinate1,
+      String coordinate2) async {
     try {
       final response = await dio.put("$API_BASEURL/api/owner", data: {
         "id": id,
@@ -103,8 +113,7 @@ class OwnerService {
 
   Future<List<Owner>> getAllOwners() async {
     try {
-      final response =
-          await dio.get("$API_BASEURL/api/owner");
+      final response = await dio.get("$API_BASEURL/api/owner");
 
       if (response.statusCode != 200) {
         throw (response.data);
@@ -113,6 +122,28 @@ class OwnerService {
       return json.map((e) => Owner.fromJson(e)).toList();
     } catch (e) {
       throw (e);
+    }
+  }
+
+  Future<String> loginOwnerRequest(String phone, String password) async {
+    try {
+      Response response = await dio.post(
+        '$API_BASEURL/api/Owner/login',
+        data: {'phone': phone, 'password': password},
+      );
+      if (response.statusCode == 400) {
+        return "Tüm zorunlu alanları doldurunuz";
+      }
+      if (response.statusCode == 404) {
+        return "Kullanıcı bulunamadı";
+      }
+      print("response");
+      print(response.data);
+      return response.data;
+    } on DioException {
+      throw ("İnternet bağlantısını kontrol edin");
+    } catch (e) {
+      throw (e.toString());
     }
   }
 }

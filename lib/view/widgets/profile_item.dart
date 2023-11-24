@@ -18,9 +18,6 @@ class ProfileItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     backgroundColor = Theme.of(context).colorScheme.background;
-    if(color=="red"){
-      backgroundColor = Theme.of(context).colorScheme.errorContainer;
-    }
     return ElevatedButton(
       onPressed: onPressedFunction,
       style: ElevatedButton.styleFrom(

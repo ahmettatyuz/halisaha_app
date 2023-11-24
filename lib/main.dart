@@ -9,6 +9,7 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/token_manager.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
@@ -71,17 +72,20 @@ class Main extends ConsumerStatefulWidget {
 
 class _MainState extends ConsumerState<Main> {
   final ownerService = OwnerService();
+  final playerService = PlayerService();
   Widget activeScreen = const Login();
   String screen = "";
+  bool isOwner = false;
 
   void showModalBottom() {
     showModalBottomSheet<void>(
-        // isScrollControlled: true,
-        useSafeArea: true,
-        context: context,
-        builder: (ctx) {
-          return const ModalBottom();
-        });
+      // isScrollControlled: true,
+      useSafeArea: true,
+      context: context,
+      builder: (ctx) {
+        return const ModalBottom();
+      },
+    );
   }
 
   void loginCheck() async {
@@ -91,7 +95,6 @@ class _MainState extends ConsumerState<Main> {
       screen = "home";
       TokenManager.token = token;
       final user = User.fromJson(JWT.decode(token).payload);
-      ref.read(userProvider.notifier).userState(user);
       if (user.role == "owner") {
         try {
           final owner = await ownerService.getOwnerById(user.id!);
@@ -101,10 +104,20 @@ class _MainState extends ConsumerState<Main> {
         } catch (e) {
           screen = "login";
         }
+      } else {
+        try {
+          final player = await playerService.getPlayerById(user.id!);
+          ref.read(playerProvider.notifier).playerState(player);
+          print("önceki oturumdan otomatik giriş");
+          print("telefon :" + player.phone.toString());
+        } catch (e) {
+          screen = "login";
+        }
       }
     } else {
       screen = "login";
     }
+
     ref.read(screenProvider.notifier).setScreen(screen);
   }
 

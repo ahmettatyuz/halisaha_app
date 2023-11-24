@@ -20,12 +20,13 @@ class Profile extends ConsumerStatefulWidget {
 
 class _ProfileState extends ConsumerState<Profile> {
   @override
-  String role = "owner";
+  bool isOwner = false;
   double height = 10;
   Owner owner = Owner(ownerFirstName: "");
   final ownerService = OwnerService();
   @override
   Widget build(BuildContext context) {
+    isOwner = ref.watch(roleProvider);
     final user = ref.watch(userProvider);
     if (user.role == "owner") {
       owner = ref.watch(ownerProvider);
@@ -34,7 +35,7 @@ class _ProfileState extends ConsumerState<Profile> {
       child: Column(
         children: [
           SizedBox(
-            height: height*2,
+            height: height * 2,
           ),
           Container(
             padding: const EdgeInsets.all(10),
@@ -42,7 +43,7 @@ class _ProfileState extends ConsumerState<Profile> {
               borderRadius: BorderRadius.circular(100),
               color: Theme.of(context).colorScheme.primaryContainer,
             ),
-            child: role == "owner"
+            child: isOwner
                 ? Icon(
                     Icons.stadium,
                     size: 150,
@@ -60,7 +61,7 @@ class _ProfileState extends ConsumerState<Profile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (role == "owner")
+              if (isOwner)
                 Column(
                   children: [
                     Text(
@@ -106,7 +107,7 @@ class _ProfileState extends ConsumerState<Profile> {
           SizedBox(
             height: height,
           ),
-          if (role == "owner")
+          if (isOwner)
             Column(
               children: [
                 ProfileItem(
@@ -133,13 +134,14 @@ class _ProfileState extends ConsumerState<Profile> {
               ],
             ),
           ProfileItem(
-              color: "red",
-              icon: Icons.logout,
-              label: "Çıkış Yap",
-              onPressedFunction: () async {
-                await TokenManager.setToken("null");
-                ref.read(screenProvider.notifier).setScreen("login");
-              }),
+            color: "red",
+            icon: Icons.logout,
+            label: "Çıkış Yap",
+            onPressedFunction: () async {
+              await TokenManager.setToken("null");
+              ref.read(screenProvider.notifier).setScreen("login");
+            },
+          ),
         ],
       ),
     );

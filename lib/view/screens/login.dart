@@ -7,10 +7,10 @@ import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/models/token_manager.dart';
-import 'package:halisaha_app/services/auth_service.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/screens/register.dart';
 
@@ -24,34 +24,53 @@ class _LoginState extends ConsumerState<Login> {
   bool isLoggingIn = false;
   bool isOwner = false;
   final ownerService = OwnerService();
+  final playerService = PlayerService();
   void _register() {
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
       return const Register();
     }));
   }
 
-  void loginOwner() async {
+  void login() async {
     String phone = "5${telefonController.text}";
     String password = parolaController.text;
+    bool isOwner = ref.watch(roleProvider);
     isLoggingIn = true;
     try {
-      String token = await AuthService().loginOwnerRequest(phone, password);
-      if (TokenManager.verifyToken(token)) {
-        TokenManager.token = token;
-        final user = User.fromJson(JWT.decode(token).payload);
-        ref.read(userProvider.notifier).userState(user);
-        if (user.role == "owner") {
+      if (isOwner) {
+        String token = await OwnerService().loginOwnerRequest(phone, password);
+        if (TokenManager.verifyToken(token)) {
+          TokenManager.token = token;
+          final user = User.fromJson(JWT.decode(token).payload);
+          ref.read(userProvider.notifier).userState(user);
           final owner = await ownerService.getOwnerById(user.id!);
           ref.read(ownerProvider.notifier).ownerState(owner);
-          print("login ekranından manuel giriş");
+          print("login ekranından manuel giriş woner");
           print("telefon :" + owner.phone.toString());
+
+          await TokenManager.setToken(token);
+          ref.read(screenProvider.notifier).setScreen("home");
+        } else {
+          ref.read(screenProvider.notifier).setScreen("login");
+          messageBox(context, "Uyarı", token.toString(), "Tamam");
         }
-        
-        await TokenManager.setToken(token);
-        ref.read(screenProvider.notifier).setScreen("home");
       } else {
-        ref.read(screenProvider.notifier).setScreen("login");
-        messageBox(context, "Uyarı", token.toString(), "Tamam");
+        String token =
+            await PlayerService().loginPlayerRequest(phone, password);
+        if (TokenManager.verifyToken(token)) {
+          final user = User.fromJson(JWT.decode(token).payload);
+          ref.read(userProvider.notifier).userState(user);
+          final player = await playerService.getPlayerById(user.id!);
+          ref.read(playerProvider.notifier).playerState(player);
+          print("login ekranından manuel giriş player");
+          print("telefon :" + player.phone.toString());
+
+          await TokenManager.setToken(token);
+          ref.read(screenProvider.notifier).setScreen("home");
+        } else {
+          ref.read(screenProvider.notifier).setScreen("login");
+          messageBox(context, "Uyarı", token.toString(), "Tamam");
+        }
       }
     } catch (e) {
       ref.read(screenProvider.notifier).setScreen("login");
@@ -59,30 +78,9 @@ class _LoginState extends ConsumerState<Login> {
     }
 
     setState(() {
-          isLoggingIn=false;
-        });
+      isLoggingIn = false;
+    });
   }
-
-  // void loginPlayer() {
-  //   String phone = "5${telefonController.text}";
-  //   String password = parolaController.text;
-  //   ref.read(screenProvider.notifier).auth(1);
-  //   AuthService().loginPlayerRequest(phone, password).then(
-  //     (value) {
-  //       if (value.startsWith("ey")) {
-  //         TokenManager.setToken(value).then((_) {
-  //           ref.read(authProvider.notifier).auth(2);
-  //         });
-  //       } else {
-  //         ref.read(authProvider.notifier).auth(0);
-  //         messageBox(context, "Uyarı", value.toString(), "Tamam");
-  //       }
-  //     },
-  //   ).catchError((e) {
-  //     ref.read(authProvider.notifier).auth(0);
-  //     messageBox(context, "Uyarı", e.toString(), "Tamam");
-  //   });
-  // }
 
   TextEditingController telefonController = TextEditingController();
   TextEditingController parolaController = TextEditingController();
@@ -154,11 +152,7 @@ class _LoginState extends ConsumerState<Login> {
                             icon: Icons.sports_volleyball,
                             buttonText: "Giriş Yap",
                             onPressed: () {
-                              if (isOwner) {
-                                loginOwner();
-                              } else {
-                                // loginPlayer();
-                              }
+                              login();
                             },
                           )
                         ],

@@ -7,9 +7,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
@@ -23,6 +26,27 @@ class EditProfile extends ConsumerStatefulWidget {
 }
 
 class _EditProfileState extends ConsumerState<EditProfile> {
+  final ownerService = OwnerService();
+  final playerService = PlayerService();
+  Owner owner = Owner();
+  Player player = Player();
+  bool isOwner = true;
+  double paddingValue = 20.0;
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+  double currentLatitude = 0;
+  double currentLongitude = 0;
+  Set<Marker> markers = {};
+
+  TextEditingController adSoyadController = TextEditingController();
+  TextEditingController telefonController = TextEditingController();
+  TextEditingController epostaController = TextEditingController();
+  TextEditingController isyeriController = TextEditingController();
+  TextEditingController adresController = TextEditingController();
+  TextEditingController websiteController = TextEditingController();
+  String selectedCity = "01";
+
+
   void updateOwnerProfile() async {
     try {
       final result = await ownerService.update(
@@ -49,38 +73,29 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     }
   }
 
-  final ownerService = OwnerService();
-  Owner owner = Owner();
-  bool isOwner = true;
-  double paddingValue = 20.0;
-  final Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
-  double currentLatitude = 0;
-  double currentLongitude = 0;
-  Set<Marker> markers = {};
+  void updatePlayerProfile() async {
+    try {
+      final result = await playerService.update(
+        player.id!,
+        adSoyadController.text,
+        telefonController.text,
+        selectedCity,
+        adresController.text,
+        epostaController.text,
+      );
+      ref.read(playerProvider.notifier).playerState(result);
+      toast(context, "PROFİL", "Profiliniz güncellendi",
+          ToastificationType.success, 2, Icons.check);
+      Navigator.pop(context);
+    } catch (e) {
+      toast(context, "PROFİL", "İşlem başarısız", ToastificationType.error, 2,
+          Icons.error);
+    }
+  }
 
-  TextEditingController adSoyadController = TextEditingController();
-  TextEditingController telefonController = TextEditingController();
-  TextEditingController epostaController = TextEditingController();
-  TextEditingController isyeriController = TextEditingController();
-  TextEditingController adresController = TextEditingController();
-  TextEditingController websiteController = TextEditingController();
-  String selectedCity = "01";
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(userProvider).role == "owner";
-    if (markers.isEmpty) {
-      currentLatitude = double.parse(ref.watch(ownerProvider).coordinate1!);
-      currentLongitude = double.parse(ref.watch(ownerProvider).coordinate2!);
-    }
-    markers = {
-      Marker(
-        markerId: const MarkerId("1"),
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: const InfoWindow(title: "Halısahanızın Konumu"),
-        position: LatLng(currentLatitude, currentLongitude),
-      ),
-    };
+    isOwner = ref.watch(roleProvider);
     if (isOwner) {
       owner = ref.watch(ownerProvider);
       adSoyadController.text = owner.ownerFirstName!;
@@ -90,6 +105,25 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       isyeriController.text = owner.pitchName!;
       adresController.text = owner.address!;
       websiteController.text = owner.web!;
+      if (markers.isEmpty) {
+        currentLatitude = double.parse(owner.coordinate1!);
+        currentLongitude = double.parse(owner.coordinate2!);
+      }
+      markers = {
+        Marker(
+          markerId: const MarkerId("1"),
+          icon: BitmapDescriptor.defaultMarker,
+          infoWindow: const InfoWindow(title: "Halısahanızın Konumu"),
+          position: LatLng(currentLatitude, currentLongitude),
+        ),
+      };
+    } else {
+      player = ref.watch(playerProvider);
+      adSoyadController.text = player.firstName!;
+      telefonController.text = player.phone!;
+      selectedCity = player.city!;
+      epostaController.text = player.mail!;
+      adresController.text = player.address!;
     }
     return Scaffold(
       appBar: AppBar(
@@ -225,7 +259,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         zoom: 15,
-                        target: LatLng(currentLatitude,currentLongitude),
+                        target: LatLng(currentLatitude, currentLongitude),
                       ),
                       onMapCreated: (GoogleMapController controller) {
                         _mapController.complete(controller);
@@ -278,9 +312,16 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 ],
               ),
             CustomButton(
-                icon: Icons.save,
-                buttonText: "Kaydet",
-                onPressed: updateOwnerProfile),
+              icon: Icons.save,
+              buttonText: "Kaydet",
+              onPressed: () {
+                if (isOwner) {
+                  updateOwnerProfile();
+                } else {
+                  updatePlayerProfile();
+                }
+              },
+            ),
             const SizedBox(
               height: 10,
             ),
