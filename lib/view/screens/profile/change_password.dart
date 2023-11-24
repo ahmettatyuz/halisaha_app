@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/services/owner_service.dart';
+import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
@@ -18,7 +20,7 @@ class ChangePassword extends ConsumerStatefulWidget {
 }
 
 class _ChangePasswordState extends ConsumerState<ChangePassword> {
-  void changePassword() async {
+  void changePasswordOwner() async {
     try {
       String pw1 = parola1Controller.text;
       String pw2 = parola2Controller.text;
@@ -26,11 +28,30 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
         await ownerService.changePassword(ref.watch(ownerProvider).id!,
             parola0Controller.text, parola1Controller.text);
         toast(context, "PROFİL", "Parolanız değiştirildi.",
-          ToastificationType.success, 2, Icons.check);
+            ToastificationType.success, 2, Icons.check);
         Navigator.pop(context);
       } else {
         toast(context, "PROFİL", "Parolalar uyuşmuyor.",
-          ToastificationType.error, 2, Icons.error);
+            ToastificationType.error, 2, Icons.error);
+      }
+    } catch (e) {
+      await messageBox(context, "Uyarı", e.toString(), "Tamam");
+    }
+  }
+
+  void changePasswordPlayer() async {
+    try {
+      String pw1 = parola1Controller.text;
+      String pw2 = parola2Controller.text;
+      if (pw1 == pw2 && pw1.isNotEmpty) {
+        await playerService.changePassword(ref.watch(playerProvider).id!,
+            parola0Controller.text, parola1Controller.text);
+        toast(context, "PROFİL", "Parolanız değiştirildi.",
+            ToastificationType.success, 2, Icons.check);
+        Navigator.pop(context);
+      } else {
+        toast(context, "PROFİL", "Parolalar uyuşmuyor.",
+            ToastificationType.error, 2, Icons.error);
       }
     } catch (e) {
       await messageBox(context, "Uyarı", e.toString(), "Tamam");
@@ -39,6 +60,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
 
   Owner owner = Owner();
   OwnerService ownerService = OwnerService();
+  PlayerService playerService = PlayerService();
   bool isOwner = false;
   double paddingValue = 20.0;
   TextEditingController parola0Controller = TextEditingController();
@@ -46,6 +68,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
   TextEditingController parola2Controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    isOwner = ref.watch(roleProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -97,9 +120,16 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
             height: 10,
           ),
           CustomButton(
-              icon: Icons.save,
-              buttonText: "Kaydet",
-              onPressed: changePassword),
+            icon: Icons.save,
+            buttonText: "Kaydet",
+            onPressed: (){
+              if(isOwner){
+                changePasswordOwner();
+              }else{
+                changePasswordPlayer();
+              }
+            },
+          ),
           const SizedBox(
             height: 10,
           ),

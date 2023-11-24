@@ -67,4 +67,24 @@ class PlayerService {
       throw ("İşlem başarısız.");
     }
   }
+
+  Future<void> changePassword(
+      int id, String oldPassword, String newPassword) async {
+    try {
+      final response = await dio.put("$API_BASEURL/api/player/password", data: {
+        "id": id,
+        "oldPassword": oldPassword,
+        "password": newPassword
+      });
+
+      if (response.statusCode != 200) {
+        throw (response.data);
+      }
+      print({"id": id, "oldPassword": "a", "password": newPassword});
+      print(response.data);
+      print(response.statusCode);
+    } catch (e) {
+      throw (e);
+    }
+  }
 }
