@@ -7,6 +7,7 @@ import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/widgets/session_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Halisaha extends ConsumerStatefulWidget {
   const Halisaha({super.key, required this.owner});
@@ -60,7 +61,9 @@ class _HalisahaState extends ConsumerState<Halisaha> {
               TextButton.icon(
                 label: const Text("Yol Tarifi Al"),
                 icon: const Icon(Icons.route),
-                onPressed: () {},
+                onPressed: () {
+                  launchUrl(Uri.parse("https://maps.apple.com/?q=${location.target.latitude},${location.target.longitude}"));
+                },
               ),
             ],
           ),

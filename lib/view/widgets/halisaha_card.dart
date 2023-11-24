@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/screens/halisaha/halisaha_detay.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OwnerCard extends ConsumerStatefulWidget {
   const OwnerCard({super.key, required this.owner});
@@ -21,7 +23,10 @@ class _OwnerCardState extends ConsumerState<OwnerCard> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> Halisaha(owner: widget.owner)));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => Halisaha(owner: widget.owner)));
               },
               child: Column(
                 children: [
@@ -72,20 +77,23 @@ class _OwnerCardState extends ConsumerState<OwnerCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.phone,
-                        size: 20, color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      widget.owner.phone!,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ],
+                TextButton.icon(
+                  onPressed: ()async {
+                    final sms = Uri.parse('tel:+905395513620');
+                    if (await canLaunchUrl(sms)) {
+                      launchUrl(sms);
+                    } else {
+                      messageBox(context, "Uyarı", "Bu numara aranamıyor.", "Tamam");
+                    }
+                  },
+                  icon: Icon(Icons.phone,
+                      size: 20, color: Theme.of(context).colorScheme.primary),
+                  label: Text(
+                    widget.owner.phone!,
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
                 Row(
                   children: [
