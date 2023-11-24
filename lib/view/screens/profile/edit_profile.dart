@@ -1,7 +1,12 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_build_context_synchronously
 
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/services/owner_service.dart';
@@ -30,6 +35,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         adresController.text,
         websiteController.text,
         owner.point!,
+        currentLatitude.toString(),
+        currentLongitude.toString(),
       );
       ref.read(ownerProvider.notifier).ownerState(result);
       toast(context, "PROFİL", "Profiliniz güncellendi",
@@ -37,8 +44,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       // await messageBox(context, "Uyarı", "Bilgileriniz güncellendi.", "Tamam");
       Navigator.pop(context);
     } catch (e) {
-      toast(context, "PROFİL", "İşlem başarısız",
-          ToastificationType.error, 2, Icons.error);
+      toast(context, "PROFİL", "İşlem başarısız", ToastificationType.error, 2,
+          Icons.error);
     }
   }
 
@@ -46,6 +53,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   Owner owner = Owner();
   bool isOwner = true;
   double paddingValue = 20.0;
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+  double currentLatitude = 0;
+  double currentLongitude = 0;
+  Set<Marker> markers = {};
+
   TextEditingController adSoyadController = TextEditingController();
   TextEditingController telefonController = TextEditingController();
   TextEditingController epostaController = TextEditingController();
@@ -56,6 +69,18 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   Widget build(BuildContext context) {
     isOwner = ref.watch(userProvider).role == "owner";
+    if (markers.isEmpty) {
+      currentLatitude = double.parse(ref.watch(ownerProvider).coordinate1!);
+      currentLongitude = double.parse(ref.watch(ownerProvider).coordinate2!);
+    }
+    markers = {
+      Marker(
+        markerId: const MarkerId("1"),
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: const InfoWindow(title: "Halısahanızın Konumu"),
+        position: LatLng(currentLatitude, currentLongitude),
+      ),
+    };
     if (isOwner) {
       owner = ref.watch(ownerProvider);
       adSoyadController.text = owner.ownerFirstName!;
@@ -175,6 +200,41 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             if (isOwner)
               Column(
                 children: [
+                  Container(
+                    clipBehavior: Clip.antiAlias,
+                    width: MediaQuery.of(context).size.width - 40,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: GoogleMap(
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(
+                          () => EagerGestureRecognizer(),
+                        )
+                      },
+                      markers: markers,
+                      onTap: (LatLng coordianates) {
+                        setState(
+                          () {
+                            currentLatitude = coordianates.latitude;
+                            currentLongitude = coordianates.longitude;
+                          },
+                        );
+                      },
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        zoom: 15,
+                        target: LatLng(currentLatitude,currentLongitude),
+                      ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _mapController.complete(controller);
+                      },
+                      myLocationButtonEnabled: false,
+                      myLocationEnabled: false,
+                      scrollGesturesEnabled: true,
+                    ),
+                  ),
                   Text(
                     "Halısaha Bilgileri",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(),

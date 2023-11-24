@@ -25,6 +25,8 @@ class OwnerService {
     String adres,
     String isYeri,
     String webAdres,
+    String coordinate1,
+    String coordinate2
   ) async {
     try {
       final response = await dio.post("$API_BASEURL/api/owner/register", data: {
@@ -38,8 +40,8 @@ class OwnerService {
         "city": selectedCity,
         "address": adres,
         "point": 0,
-        "coordinate1": "string",
-        "coordinate2": "string",
+        "coordinate1": coordinate1,
+        "coordinate2": coordinate2,
         "createDate": "2023-11-14T19:43:21.916Z"
       });
       return [response.statusCode.toString(), response.data.toString()];
@@ -49,7 +51,7 @@ class OwnerService {
   }
 
   Future<Owner> update(int id, String ad, String phone, String city,
-      String mail, String isyeri, String adres, String web, int point) async {
+      String mail, String isyeri, String adres, String web, int point, String coordinate1,String coordinate2) async {
     try {
       final response = await dio.put("$API_BASEURL/api/owner", data: {
         "id": id,
@@ -63,8 +65,8 @@ class OwnerService {
         "city": city,
         "address": adres,
         "point": point,
-        "coordinate1": "string",
-        "coordinate2": "string",
+        "coordinate1": coordinate1,
+        "coordinate2": coordinate2,
         "createDate": "2023-11-14T19:43:21.916Z"
       });
       print(response.data);

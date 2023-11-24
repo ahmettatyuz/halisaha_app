@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/view/widgets/add_session.dart';
 import 'package:halisaha_app/view/widgets/session_card.dart';
@@ -24,6 +25,9 @@ class _SessionEditState extends ConsumerState<SessionEdit> {
 
   @override
   Widget build(BuildContext context) {
+    // if(ref.watch(ownerProvider).id != ref.watch(sessionsProvider)[0].id){
+    //   ref.read(sessionsProvider.notifier).fetchSessions(ref.watch(ownerProvider).id!);
+    // }
     List<Session> sessions = ref.watch(sessionsProvider);
     Widget activeScreen = Center(
       child: Text(

@@ -20,12 +20,12 @@ class _HalisahaState extends ConsumerState<Halisaha> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
   @override
   Widget build(BuildContext context) {
+    final CameraPosition location = CameraPosition(
+      target: LatLng(double.parse(widget.owner.coordinate1!), double.parse(widget.owner.coordinate2!)),
+      zoom: 16,
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,10 +47,11 @@ class _HalisahaState extends ConsumerState<Halisaha> {
             ),
             child: GoogleMap(
               mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
+              initialCameraPosition: location,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
+              markers: {Marker(markerId:const MarkerId("1"),position: location.target)},
             ),
           ),
           Row(
@@ -100,8 +101,9 @@ class _HalisahaState extends ConsumerState<Halisaha> {
                   ),
                 );
               } else {
-                return const Center(
-                  child: Text("Bu halısahanın hiç seansı yok! "),
+                return Container(
+                  padding: const EdgeInsets.all(15),
+                  child: const Text("Bu halısahanın hiç seansı yok! "),
                 );
               }
             },

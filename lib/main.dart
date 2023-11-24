@@ -93,10 +93,14 @@ class _MainState extends ConsumerState<Main> {
       final user = User.fromJson(JWT.decode(token).payload);
       ref.read(userProvider.notifier).userState(user);
       if (user.role == "owner") {
-        final owner = await ownerService.getOwnerById(user.id!);
-        ref.read(ownerProvider.notifier).ownerState(owner);
-        print("önceki oturumdan otomatik giriş");
-        print("telefon :" + owner.phone.toString());
+        try {
+          final owner = await ownerService.getOwnerById(user.id!);
+          ref.read(ownerProvider.notifier).ownerState(owner);
+          print("önceki oturumdan otomatik giriş");
+          print("telefon :" + owner.phone.toString());
+        } catch (e) {
+          screen = "login";
+        }
       }
     } else {
       screen = "login";

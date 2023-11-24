@@ -35,8 +35,9 @@ class _RegisterState extends ConsumerState<Register> {
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
-  double latitude = 0;
-  double longitude = 0;
+  double currentLatitude = 0;
+  double currentLongitude = 0;
+  Set<Marker> markers = {};
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -89,23 +90,27 @@ class _RegisterState extends ConsumerState<Register> {
         telefon.isNotEmpty &&
         double.tryParse(telefon) != null &&
         eposta.isNotEmpty &&
-        parola1.isNotEmpty) {
+        parola1.isNotEmpty && isyeri.isNotEmpty && adres.isNotEmpty) {
       if (parola1 == parola2) {
-        OwnerService()
-            .register(parola1, adSoyad, eposta, telefon, selectedCity, adres,
-                isyeri, webAdres)
-            .then((value) {
-          if (value[0] == "200") {
-            Navigator.pop(context);
-          } else {
-            messageBox(context, "Uyarı", value[1], "Tamam");
-          }
-        });
+        if (markers.isNotEmpty) {
+          OwnerService()
+              .register(parola1, adSoyad, eposta, telefon, selectedCity, adres,
+                  isyeri, webAdres,markers.first.position.latitude.toString(),markers.first.position.longitude.toString())
+              .then((value) {
+            if (value[0] == "200") {
+              Navigator.pop(context);
+            } else {
+              messageBox(context, "Uyarı", value[1], "Tamam");
+            }
+          });
+        }else{
+          message = "Lütfen haritadan halısahanızın konumunu seçin.";
+        }
       } else {
-        message = "Parolalar uyuşmuyor";
+        message = "Parolalar uyuşmuyor.";
       }
     } else {
-      message = "Lütfen tüm alanlara geçerli değerleri girin";
+      message = "Lütfen tüm alanlara geçerli değerler girin";
     }
     if (message != "") {
       messageBox(context, "Uyarı", message, "Tamam");
@@ -327,30 +332,45 @@ class _RegisterState extends ConsumerState<Register> {
                     "Halısaha Bilgileri",
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(),
                   ),
-                  SingleChildScrollView(
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      width: MediaQuery.of(context).size.width - 40,
-                      height: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                  Container(
+                    clipBehavior: Clip.antiAlias,
+                    width: MediaQuery.of(context).size.width - 40,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: GoogleMap(
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(
+                          () => EagerGestureRecognizer(),
+                        )
+                      },
+                      markers: markers,
+                      onTap: (LatLng coordianates) {
+                        setState(
+                          () {
+                            markers = {
+                              Marker(
+                                markerId: const MarkerId("1"),
+                                position: coordianates,
+                                icon: BitmapDescriptor.defaultMarker,
+                                infoWindow: const InfoWindow(
+                                    title: "Halısahanızın Konumu"),
+                              ),
+                            };
+                          },
+                        );
+                      },
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(currentLatitude, currentLongitude),
                       ),
-                      child: GoogleMap(
-                        gestureRecognizers: {
-                          Factory<OneSequenceGestureRecognizer>(
-                              () => EagerGestureRecognizer())
-                        },
-                        mapType: MapType.normal,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(latitude, longitude),
-                        ),
-                        onMapCreated: (GoogleMapController controller) {
-                          _mapController.complete(controller);
-                        },
-                        myLocationButtonEnabled: false,
-                        myLocationEnabled: false,
-                        scrollGesturesEnabled: true,
-                      ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _mapController.complete(controller);
+                      },
+                      myLocationButtonEnabled: false,
+                      myLocationEnabled: false,
+                      scrollGesturesEnabled: true,
                     ),
                   ),
                   const SizedBox(
@@ -361,12 +381,15 @@ class _RegisterState extends ConsumerState<Register> {
                     children: [
                       TextButton.icon(
                         onPressed: () {
-                          _determinePosition().then((value) {
-                            _goToLocation(
-                                LatLng(value.latitude, value.longitude));
-                          });
+                          _determinePosition().then(
+                            (value) {
+                              _goToLocation(
+                                LatLng(value.latitude, value.longitude),
+                              );
+                            },
+                          );
                         },
-                        icon: const Icon(Icons.location_on),
+                        icon: const Icon(Icons.location_searching_outlined),
                         label: const Text("Konumu Bul"),
                       ),
                     ],

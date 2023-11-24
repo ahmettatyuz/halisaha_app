@@ -114,7 +114,7 @@ class _ProfileState extends ConsumerState<Profile> {
                   label: "Seansları Düzenle",
                   onPressedFunction: () {
                     if (ref.watch(sessionsProvider).isNotEmpty &&
-                        ref.watch(sessionsProvider)[0].id == null) {
+                        ref.watch(sessionsProvider)[0].id != owner.id) {
                       ref
                           .read(sessionsProvider.notifier)
                           .fetchSessions(owner.id!);
