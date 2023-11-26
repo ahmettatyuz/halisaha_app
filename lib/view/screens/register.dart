@@ -1,12 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:halisaha_app/global/providers/screen_provider.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
+import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
@@ -21,7 +21,6 @@ class Register extends ConsumerStatefulWidget {
 }
 
 class _RegisterState extends ConsumerState<Register> {
-  bool isOwner = false;
   double paddingValue = 20.0;
   TextEditingController adSoyadController = TextEditingController();
   TextEditingController telefonController = TextEditingController();
@@ -32,7 +31,7 @@ class _RegisterState extends ConsumerState<Register> {
   String selectedCity = "01";
   TextEditingController parola1Controller = TextEditingController();
   TextEditingController parola2Controller = TextEditingController();
-
+  User user = User();
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
   double currentLatitude = 0;
@@ -90,12 +89,23 @@ class _RegisterState extends ConsumerState<Register> {
         telefon.isNotEmpty &&
         double.tryParse(telefon) != null &&
         eposta.isNotEmpty &&
-        parola1.isNotEmpty && isyeri.isNotEmpty && adres.isNotEmpty) {
+        parola1.isNotEmpty &&
+        isyeri.isNotEmpty &&
+        adres.isNotEmpty) {
       if (parola1 == parola2) {
         if (markers.isNotEmpty) {
           OwnerService()
-              .register(parola1, adSoyad, eposta, telefon, selectedCity, adres,
-                  isyeri, webAdres,markers.first.position.latitude.toString(),markers.first.position.longitude.toString())
+              .register(
+                  parola1,
+                  adSoyad,
+                  eposta,
+                  telefon,
+                  selectedCity,
+                  adres,
+                  isyeri,
+                  webAdres,
+                  markers.first.position.latitude.toString(),
+                  markers.first.position.longitude.toString())
               .then((value) {
             if (value[0] == "200") {
               Navigator.pop(context);
@@ -103,7 +113,7 @@ class _RegisterState extends ConsumerState<Register> {
               messageBox(context, "Uyarı", value[1], "Tamam");
             }
           });
-        }else{
+        } else {
           message = "Lütfen haritadan halısahanızın konumunu seçin.";
         }
       } else {
@@ -164,7 +174,7 @@ class _RegisterState extends ConsumerState<Register> {
 
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(roleProvider);
+    user = ref.read(userProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -183,7 +193,7 @@ class _RegisterState extends ConsumerState<Register> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
                   color: Theme.of(context).colorScheme.primaryContainer),
-              child: isOwner
+              child: user.role == "owner"
                   ? Icon(
                       Icons.stadium,
                       size: 150,
@@ -200,9 +210,12 @@ class _RegisterState extends ConsumerState<Register> {
             ),
             SwitchListTile(
               title: const Text("Halısaha sahibi misiniz ? "),
-              value: isOwner,
+              value: user.role == "owner",
               onChanged: (checked) {
-                ref.read(roleProvider.notifier).changeRole(checked);
+                setState(() {});
+                ref
+                    .read(userProvider.notifier)
+                    .userState(User(role: checked ? "owner" : "player"));
               },
             ),
             const SizedBox(
@@ -274,7 +287,7 @@ class _RegisterState extends ConsumerState<Register> {
             const SizedBox(
               height: 10,
             ),
-            if (!isOwner)
+            if (user.role == "player")
               Column(
                 children: [
                   Padding(
@@ -325,7 +338,7 @@ class _RegisterState extends ConsumerState<Register> {
             const SizedBox(
               height: 10,
             ),
-            if (isOwner)
+            if (user.role == "owner")
               Column(
                 children: [
                   Text(
@@ -366,7 +379,9 @@ class _RegisterState extends ConsumerState<Register> {
                         target: LatLng(currentLatitude, currentLongitude),
                       ),
                       onMapCreated: (GoogleMapController controller) {
-                        _mapController.complete(controller);
+                        try {
+                          _mapController.complete(controller);
+                        } catch (e) {}
                       },
                       myLocationButtonEnabled: false,
                       myLocationEnabled: false,
@@ -434,7 +449,7 @@ class _RegisterState extends ConsumerState<Register> {
               ),
             ElevatedButton.icon(
               onPressed: () {
-                if (isOwner) {
+                if (user.role == "owner") {
                   _registerOwner();
                 } else {
                   _registerPlayer();

@@ -11,16 +11,3 @@ class ScreenNotifier extends StateNotifier<String> {
 final screenProvider = StateNotifierProvider<ScreenNotifier,String>((ref) {
   return ScreenNotifier();
 });
-
-
-
-class RoleNotifier extends StateNotifier<bool> {
-  RoleNotifier(): super(false);
-  bool changeRole(bool role){
-    state = role;
-    return role;
-  }
-}
-final roleProvider = StateNotifierProvider<RoleNotifier,bool>((ref) {
-  return RoleNotifier();
-});

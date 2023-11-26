@@ -24,9 +24,6 @@ class _SessionEditState extends ConsumerState<SessionEdit> {
 
   @override
   Widget build(BuildContext context) {
-    // if(ref.watch(ownerProvider).id != ref.watch(sessionsProvider)[0].id){
-    //   ref.read(sessionsProvider.notifier).fetchSessions(ref.watch(ownerProvider).id!);
-    // }
     List<Session> sessions = ref.watch(sessionsProvider);
     Widget activeScreen = Center(
       child: Text(
@@ -50,6 +47,7 @@ class _SessionEditState extends ConsumerState<SessionEdit> {
               index: index,
             );
           }
+          return null;
         },
       );
     }

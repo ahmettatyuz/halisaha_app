@@ -22,7 +22,7 @@ class Login extends ConsumerStatefulWidget {
 
 class _LoginState extends ConsumerState<Login> {
   bool isLoggingIn = false;
-  bool isOwner = false;
+  User user = User();
   final ownerService = OwnerService();
   final playerService = PlayerService();
   void _register() {
@@ -34,10 +34,10 @@ class _LoginState extends ConsumerState<Login> {
   void login() async {
     String phone = "5${telefonController.text}";
     String password = parolaController.text;
-    bool isOwner = ref.watch(roleProvider);
     isLoggingIn = true;
+    print("login user: "+user.role.toString());
     try {
-      if (isOwner) {
+      if (user.role == "owner") {
         String token = await OwnerService().loginOwnerRequest(phone, password);
         if (TokenManager.verifyToken(token)) {
           TokenManager.token = token;
@@ -87,7 +87,7 @@ class _LoginState extends ConsumerState<Login> {
 
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(roleProvider);
+    user = ref.watch(userProvider);
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -129,10 +129,10 @@ class _LoginState extends ConsumerState<Login> {
                       ),
                       SwitchListTile(
                         title: const Text("Halısaha Hesabı"),
-                        value: isOwner,
+                        value: user.role == "owner",
                         onChanged: (checked) {
-                          ref.read(roleProvider.notifier).changeRole(checked);
-                          // ref.read(roleProvider.notifier) = checked;
+                          ref.read(userProvider.notifier).userState(
+                              User(role: checked ? "owner" : "player"));
                         },
                       ),
                       const SizedBox(
@@ -164,7 +164,7 @@ class _LoginState extends ConsumerState<Login> {
                       padding: EdgeInsets.all(20.0),
                       child: CircularProgressIndicator(),
                     ),
-                  )
+                  ),
           ],
         ),
       ),

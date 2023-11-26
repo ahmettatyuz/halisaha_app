@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
@@ -61,14 +60,14 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
   Owner owner = Owner();
   OwnerService ownerService = OwnerService();
   PlayerService playerService = PlayerService();
-  bool isOwner = false;
+  User user = User();
   double paddingValue = 20.0;
   TextEditingController parola0Controller = TextEditingController();
   TextEditingController parola1Controller = TextEditingController();
   TextEditingController parola2Controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(roleProvider);
+    user = ref.watch(userProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -123,7 +122,7 @@ class _ChangePasswordState extends ConsumerState<ChangePassword> {
             icon: Icons.save,
             buttonText: "Kaydet",
             onPressed: (){
-              if(isOwner){
+              if(user.role=="owner"){
                 changePasswordOwner();
               }else{
                 changePasswordPlayer();

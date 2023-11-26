@@ -1,10 +1,14 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
+import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/models/token_manager.dart';
+import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/screens/profile/change_password.dart';
 import 'package:halisaha_app/view/screens/profile/edit_profile.dart';
@@ -19,18 +23,22 @@ class Profile extends ConsumerStatefulWidget {
 }
 
 class _ProfileState extends ConsumerState<Profile> {
-  @override
-  bool isOwner = false;
+  User user = User();
   double height = 10;
-  Owner owner = Owner(ownerFirstName: "");
+  Owner owner = Owner();
+  Player player = Player();
   final ownerService = OwnerService();
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(roleProvider);
-    final user = ref.watch(userProvider);
+    user = ref.watch(userProvider);
+    print("user: ");
+    print(user.firstname);
+    print(user.role);
     if (user.role == "owner") {
       owner = ref.watch(ownerProvider);
-    } else {}
+    } else {
+      player = ref.watch(playerProvider);
+    }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -43,7 +51,7 @@ class _ProfileState extends ConsumerState<Profile> {
               borderRadius: BorderRadius.circular(100),
               color: Theme.of(context).colorScheme.primaryContainer,
             ),
-            child: isOwner
+            child: user.role == "owner"
                 ? Icon(
                     Icons.stadium,
                     size: 150,
@@ -61,21 +69,28 @@ class _ProfileState extends ConsumerState<Profile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (isOwner)
-                Column(
-                  children: [
-                    Text(
-                      owner.ownerFirstName!,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      owner.pitchName!,
+              user.role == "owner"
+                  ? Column(
+                      children: [
+                        Text(
+                          owner.ownerFirstName!,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Text(
+                          owner.pitchName!,
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      player.firstName!,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                  ],
-                ),
             ],
           ),
           SizedBox(
@@ -107,7 +122,7 @@ class _ProfileState extends ConsumerState<Profile> {
           SizedBox(
             height: height,
           ),
-          if (isOwner)
+          if (user.role == "owner")
             Column(
               children: [
                 ProfileItem(

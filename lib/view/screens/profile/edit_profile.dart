@@ -1,16 +1,15 @@
 // ignore_for_file: file_names, use_build_context_synchronously
 
 import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:halisaha_app/global/providers/screen_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/player.dart';
+import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
@@ -30,7 +29,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   final playerService = PlayerService();
   Owner owner = Owner();
   Player player = Player();
-  bool isOwner = true;
+  User user = User();
   double paddingValue = 20.0;
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -95,8 +94,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    isOwner = ref.watch(roleProvider);
-    if (isOwner) {
+    user = ref.watch(userProvider);
+    if (user.role=="owner") {
       owner = ref.watch(ownerProvider);
       adSoyadController.text = owner.ownerFirstName!;
       telefonController.text = owner.phone!;
@@ -204,7 +203,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             const SizedBox(
               height: 10,
             ),
-            if (!isOwner)
+            if (user.role=="player")
               Column(
                 children: [
                   Padding(
@@ -231,7 +230,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             const SizedBox(
               height: 10,
             ),
-            if (isOwner)
+            if (user.role=="owner")
               Column(
                 children: [
                   Container(
@@ -315,7 +314,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
               icon: Icons.save,
               buttonText: "Kaydet",
               onPressed: () {
-                if (isOwner) {
+                if (user.role=="owner") {
                   updateOwnerProfile();
                 } else {
                   updatePlayerProfile();

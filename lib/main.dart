@@ -55,7 +55,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Halısaha App",
+      title: "Halısaha+",
       debugShowCheckedModeBanner: false,
       theme: theme,
       home: const Main(),
@@ -98,6 +98,7 @@ class _MainState extends ConsumerState<Main> {
       if (user.role == "owner") {
         try {
           final owner = await ownerService.getOwnerById(user.id!);
+          ref.read(userProvider.notifier).userState(user);
           ref.read(ownerProvider.notifier).ownerState(owner);
           print("önceki oturumdan otomatik giriş");
           print("telefon :" + owner.phone.toString());
@@ -107,6 +108,7 @@ class _MainState extends ConsumerState<Main> {
       } else {
         try {
           final player = await playerService.getPlayerById(user.id!);
+          ref.read(userProvider.notifier).userState(user);
           ref.read(playerProvider.notifier).playerState(player);
           print("önceki oturumdan otomatik giriş");
           print("telefon :" + player.phone.toString());
@@ -151,7 +153,7 @@ class _MainState extends ConsumerState<Main> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "HALISAHA KRALI",
+          "HALISAHA+",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.green,

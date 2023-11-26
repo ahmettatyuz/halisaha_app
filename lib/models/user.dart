@@ -12,7 +12,6 @@ class User {
     int? exp;
     String? iss;
     String? aud;    
-
     User({
         this.id,
         this.firstname,
