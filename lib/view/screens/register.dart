@@ -132,7 +132,6 @@ class _RegisterState extends ConsumerState<Register> {
     String adSoyad = adSoyadController.text;
     String telefon = telefonController.text;
     String eposta = epostaController.text;
-    String isyeri = isyeriController.text;
     String adres = adresController.text;
     String parola1 = parola1Controller.text;
     String parola2 = parola2Controller.text;

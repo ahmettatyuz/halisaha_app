@@ -48,6 +48,7 @@ dependencies:
   geolocator: ^10.1.0
   url_launcher: ^6.2.1
   flutter_phone_direct_caller: ^2.1.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/loginIcon.jpeg"
+  background_color: "#fff"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
