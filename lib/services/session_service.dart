@@ -4,6 +4,7 @@ import 'package:halisaha_app/models/session.dart';
 class SessionService {
   Future<Session> addSession(int ownerId, String time) async {
     try {
+      print(time);
       final response = await dio.post("$API_BASEURL/api/session/", data: {
         "ownerId": ownerId,
         "sessionTime": time,

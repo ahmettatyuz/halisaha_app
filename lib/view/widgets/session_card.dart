@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
+import 'package:halisaha_app/models/reserved_sessions.dart';
 import 'package:halisaha_app/models/session.dart';
+import 'package:halisaha_app/services/reserved_sessions_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/widgets/add_session.dart';
@@ -12,7 +14,11 @@ import 'package:toastification/toastification.dart';
 
 class SessionCard extends ConsumerStatefulWidget {
   const SessionCard(
-      {super.key, required this.time, required this.id, required this.index,this.dismissible=true});
+      {super.key,
+      required this.time,
+      required this.id,
+      required this.index,
+      this.dismissible = true});
   final String time;
   final int id;
   final int index;
@@ -38,42 +44,59 @@ class _SessionCardState extends ConsumerState<SessionCard> {
     }
 
     if (!widget.dismissible) {
-      return Card(
-        // color: Colors.green.shade100,
-        margin: const EdgeInsets.symmetric(vertical: 10),
-        child: Container(
-          padding: const EdgeInsets.all(25),
-          decoration: const BoxDecoration(),
-          width: double.infinity,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${widget.index + 1}. Seans",
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    widget.time,
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Icon(
-                    Icons.watch_later,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ],
+      final user = ref.watch(userProvider);
+      return InkWell(
+        onTap: () {
+          if (user.role == "player") {
+            showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(
+                const Duration(days: 30),
               ),
-            ],
+            ).then((value){
+              ReserveSession().reserveSession(DateTime.parse(value.toString()), widget.id, ref.watch(userProvider).id!);
+            });
+          }
+        },
+        child: Card(
+          // color: Colors.green.shade100,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Container(
+            padding: const EdgeInsets.all(25),
+            decoration: const BoxDecoration(),
+            width: double.infinity,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${widget.index + 1}. Seans",
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      widget.time,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.secondary),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Icon(
+                      Icons.watch_later,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

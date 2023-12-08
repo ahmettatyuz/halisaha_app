@@ -26,6 +26,7 @@ class _AddSessionState extends ConsumerState<AddSession> {
       await messageBox(context, "Uyarı", "Lütfen bir saat seçin.", "Tamam");
     } else {
       try {
+        print(widget.time);
         session = await sessionService.addSession(
             ref.watch(ownerProvider).id!, widget.time);
         Navigator.pop(context);
