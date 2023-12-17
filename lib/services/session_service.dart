@@ -1,4 +1,5 @@
 import 'package:halisaha_app/global/constants/constants.dart';
+import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/session.dart';
 
 class SessionService {
@@ -10,7 +11,11 @@ class SessionService {
         "sessionTime": time,
         "createDate": "2023-11-21T19:50:38.908Z"
       });
-
+      print({
+        "ownerId": ownerId,
+        "sessionTime": time,
+        "createDate": "2023-11-21T19:50:38.908Z"
+      });
       if (response.statusCode != 200) {
         throw (response.data);
       }
@@ -32,6 +37,20 @@ class SessionService {
       }
       List<dynamic> json = response.data;
       return json.map((e) => Session.fromJson(e)).toList();
+    } catch (e) {
+      throw (e);
+    }
+  }
+
+    Future<Owner> getOwnerBySessionId(int sessionId) async {
+    try {
+      final response =
+          await dio.get("$API_BASEURL/api/session?sessionId=$sessionId");
+
+      if (response.statusCode != 200) {
+        throw (response.data);
+      }
+      return Owner.fromJson(response.data);
     } catch (e) {
       throw (e);
     }
@@ -70,4 +89,6 @@ class SessionService {
       throw (e);
     }
   }
+
+  
 }

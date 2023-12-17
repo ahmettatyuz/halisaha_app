@@ -286,7 +286,7 @@ class _RegisterState extends ConsumerState<Register> {
             const SizedBox(
               height: 10,
             ),
-            if (user.role == "player")
+            if (user.role != "owner")
               Column(
                 children: [
                   Padding(

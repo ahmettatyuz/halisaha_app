@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
-import 'package:halisaha_app/models/reserved_sessions.dart';
 import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/reserved_sessions_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
@@ -55,8 +54,11 @@ class _SessionCardState extends ConsumerState<SessionCard> {
               lastDate: DateTime.now().add(
                 const Duration(days: 30),
               ),
-            ).then((value){
-              ReserveSession().reserveSession(DateTime.parse(value.toString()), widget.id, ref.watch(userProvider).id!);
+            ).then((value) {
+              if (value != null) {
+                ReserveSession().reserveSession(
+                    value.toString().split(" ")[0], widget.id, ref.watch(userProvider).id!);
+              }
             });
           }
         },

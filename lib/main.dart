@@ -14,7 +14,7 @@ import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
-import 'package:halisaha_app/view/screens/rezervasyonlar.dart';
+import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyonlar.dart';
 import 'package:halisaha_app/view/widgets/bottom_navigation.dart';
 import 'package:halisaha_app/view/widgets/modal_bottom.dart';
 

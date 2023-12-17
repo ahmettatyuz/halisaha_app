@@ -27,8 +27,7 @@ class _AddSessionState extends ConsumerState<AddSession> {
     } else {
       try {
         print(widget.time);
-        session = await sessionService.addSession(
-            ref.watch(ownerProvider).id!, widget.time);
+        session = await sessionService.addSession(ref.watch(ownerProvider).id!, widget.time);
         Navigator.pop(context);
         ref
             .read(sessionsProvider.notifier)

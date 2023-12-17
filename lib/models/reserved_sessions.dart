@@ -4,38 +4,56 @@
 
 import 'dart:convert';
 
-ReservedSession reservedSessionFromJson(String str) => ReservedSession.fromJson(json.decode(str));
+import 'package:halisaha_app/models/player.dart';
+import 'package:halisaha_app/models/session.dart';
 
-String reservedSessionToJson(ReservedSession data) => json.encode(data.toJson());
+ReservedSession reservedSessionFromJson(String str) =>
+    ReservedSession.fromJson(json.decode(str));
+
+String reservedSessionToJson(ReservedSession data) =>
+    json.encode(data.toJson());
 
 class ReservedSession {
-    int? id;
-    DateTime? time;
-    int? sessionId;
-    int? playerId;
-    DateTime? createDate;
+  int? id;
+  String? date;
+  int? sessionId;
+  int? playerId;
+  Player? player;
+  Session? session;
+  DateTime? createDate;
 
-    ReservedSession({
-        this.id,
-        this.time,
-        this.sessionId,
-        this.playerId,
-        this.createDate,
-    });
+  ReservedSession({
+    this.id,
+    this.date,
+    this.sessionId,
+    this.playerId,
+    this.player,
+    this.session,
+    this.createDate,
+  });
 
-    factory ReservedSession.fromJson(Map<String, dynamic> json) => ReservedSession(
-        id: json["id"],
-        time: DateTime.parse(json["time"]),
-        sessionId: json["sessionId"],
-        playerId: json["playerId"],
-        createDate: DateTime.parse(json["createDate"]),
+  factory ReservedSession.fromJson(Map<String, dynamic> json) {
+    return ReservedSession(
+      id: json["id"],
+      date: json["date"],
+      sessionId: json["sessionId"],
+      playerId: json["playerId"],
+      player: json["player"] != null ? Player.fromJson(json["player"]) : null,
+      session:
+          json["session"] != null ? Session.fromJson(json["session"]) : null,
+      createDate: json["createDate"] != null
+          ? DateTime.parse(json["createDate"])
+          : null,
     );
+  }
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
-        "time": time.toString(),
+        "date": date.toString(),
         "sessionId": sessionId,
         "playerId": playerId,
+        "player": player,
+        "session": session,
         "createDate": createDate.toString(),
-    };
+      };
 }

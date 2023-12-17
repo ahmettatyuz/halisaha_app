@@ -30,6 +30,7 @@ class _HalisahalarState extends ConsumerState<Halisahalar> {
     for (var element in owners) {
       print(element.pitchName);
     }
+    print("owner count : " + owners.length.toString());
     if (owners.isNotEmpty && owners[0].id != null) {
       activeScreen = ListView.builder(
         itemCount: owners.length,

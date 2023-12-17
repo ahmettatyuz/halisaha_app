@@ -118,6 +118,7 @@ class OwnerService {
       if (response.statusCode != 200) {
         throw (response.data);
       }
+      print(response.data);
       List<dynamic> json = response.data;
       return json.map((e) => Owner.fromJson(e)).toList();
     } catch (e) {
