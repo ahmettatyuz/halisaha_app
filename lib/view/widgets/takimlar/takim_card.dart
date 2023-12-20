@@ -9,70 +9,64 @@ class TakimCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
-      child: SizedBox(
-        width: double.infinity,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => TakimDetay(team: team),
+      child: InkWell(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (ctx)=>TakimDetay(team: team)));
+        },
+        child: Column(children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(
+                "assets/icons/team.png",
+                scale: 5,
               ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.security,
-                      size: 40,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                team.name!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        overflow: TextOverflow.ellipsis),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "${team.players!.length.toString()} oyuncu",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        overflow: TextOverflow.ellipsis),
-                              ),
-                            ],
+              Column(
+                children: [
+                  Text(
+                    team.name!,
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(
+                            width:
+                                5), // İcon ile metin arasına biraz boşluk ekledik
+                        Flexible(
+                          child: Text(
+                            "${team.players!.length.toString()} oyuncu",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-        ),
+          const SizedBox(
+            height: 10,
+          ),
+        ]),
       ),
     );
   }

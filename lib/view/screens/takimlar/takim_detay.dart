@@ -31,7 +31,7 @@ class _TakimDetayState extends ConsumerState<TakimDetay> {
         icon: const Icon(Icons.add),
         onPressed: (){
           Navigator.popUntil(context, (route) => route.isFirst);
-          ref.read(screenProvider.notifier).setScreen("halisahalar");
+          ref.read(screenProvider.notifier).setScreen("oyuncular");
         },
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
-import 'package:halisaha_app/view/screens/takimlar/takimlar.dart';
 import 'package:halisaha_app/view/widgets/drawer/draweritem.dart';
 
 class MyDrawer extends ConsumerWidget {
@@ -54,14 +53,8 @@ class MyDrawer extends ConsumerWidget {
           DrawerItem(
             text: "Takımlar",
             iconData: Icons.security,
-            onClick: () async {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) {
-                    return const Takimlar();
-                  },
-                ),
-              );
+            onClick: () {
+              ref.read(screenProvider.notifier).setScreen("takimlar");
             },
           ),
         ],

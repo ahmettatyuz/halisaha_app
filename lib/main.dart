@@ -12,13 +12,12 @@ import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
-import 'package:halisaha_app/view/screens/home.dart';
 import 'package:halisaha_app/view/screens/oyuncular/oyuncular.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
-import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyonlar.dart';
+import 'package:halisaha_app/view/screens/takimlar/takimlar.dart';
 import 'package:halisaha_app/view/widgets/main/bottom_navigation.dart';
-import 'package:halisaha_app/view/widgets/drawer/drawer.dart';
 import 'package:halisaha_app/view/widgets/main/modal_bottom.dart';
+import 'package:halisaha_app/view/widgets/takimlar/takim_ekle.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -98,7 +97,7 @@ class _MainState extends ConsumerState<Main> {
     // token varsa ve geçerliyse loginState'yi günceller
     String? token = await TokenManager.getToken();
     if (token != null && TokenManager.verifyToken(token)) {
-      screen = "home";
+      screen = "halisahalar";
       TokenManager.token = token;
       final user = User.fromJson(JWT.decode(token).payload);
       if (user.role == "owner") {
@@ -132,14 +131,14 @@ class _MainState extends ConsumerState<Main> {
   void router(screen) {
     if (screen == "login") {
       activeScreen = const Login();
-    } else if (screen == "home") {
-      activeScreen = const Home();
+    } else if (screen == "takimlar") {
+      activeScreen = const Takimlar();
     } else if (screen == "profile") {
       activeScreen = const Profile();
     } else if (screen == "halisahalar") {
       activeScreen = const Halisahalar();
     } else if (screen == "rezervasyonlar") {
-      activeScreen = const Rezervasyonlar();
+      // activeScreen = const Rezervasyonlar();
     }
     else if (screen == "oyuncular") {
       activeScreen = const Oyuncular();
@@ -160,7 +159,7 @@ class _MainState extends ConsumerState<Main> {
       print("token: $value");
     });
     return Scaffold(
-      drawer: screen!="login" ? const MyDrawer():null,
+      // drawer: screen!="login" ? const MyDrawer():null,
       appBar: AppBar(
         title: const Text(
           "HALISAHA+",
@@ -182,6 +181,19 @@ class _MainState extends ConsumerState<Main> {
               ]
             : [],
       ),
+      floatingActionButton: screen == "takimlar" ? FloatingActionButton.extended(
+        label: const Text("Takım oluştur"),
+        onPressed: () {
+          showDialog(
+            context: context,
+            useSafeArea: true,
+            builder: (ctx) {
+              return const TakimEkle();
+            },
+          );
+        },
+        icon: const Icon(Icons.add),
+      ):null,
       body: activeScreen,
       extendBody: true,
       bottomNavigationBar: screen != "login" ? const BottomNavigation() : null,

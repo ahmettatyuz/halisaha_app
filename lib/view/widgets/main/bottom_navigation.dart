@@ -24,16 +24,14 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
         setState(() {
           _currentIndex = index;
         });
+
         if (index == 0) {
-          ref.read(screenProvider.notifier).setScreen("home");
-        }
-        else if (index == 1) {
           ref.read(screenProvider.notifier).setScreen("halisahalar");
-        }
-        else if (index == 2) {
+        } else if (index == 1) {
           ref.read(screenProvider.notifier).setScreen("oyuncular");
-        }
-        else if (index == 3) {
+        } else if (index == 2) {
+          ref.read(screenProvider.notifier).setScreen("takimlar");
+        } else if (index == 3) {
           ref.read(screenProvider.notifier).setScreen("rezervasyonlar");
         }
       },
@@ -41,15 +39,15 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
       // type: BottomNavigationBarType.fixed,
       items: [
         DotNavigationBarItem(
-          icon: const Icon(Icons.home),
-          // label: "Akış",
-        ),
-        DotNavigationBarItem(
           icon: const Icon(Icons.stadium),
           // label: "Halısaha Bul",
         ),
         DotNavigationBarItem(
           icon: const Icon(Icons.sports_handball),
+          // label: "Oyuncu Bul",
+        ),
+        DotNavigationBarItem(
+          icon: const Icon(Icons.security),
           // label: "Oyuncu Bul",
         ),
         DotNavigationBarItem(

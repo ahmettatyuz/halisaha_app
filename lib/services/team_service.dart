@@ -28,6 +28,7 @@ class TeamsService {
           await dio.post("$API_BASEURL/api/team/", data: team.toJson());
 
       if (response.statusCode != 200) {
+        print(team.toJson());
         throw (response.data);
       }
       print(response.data);

@@ -26,15 +26,6 @@ class _TakimlarState extends ConsumerState<Takimlar> {
   Widget build(BuildContext context) {
     List<Team> takimlar = ref.watch(teamsProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Takımlar",
-          style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
-        ),
-      ),
       body: takimlar[0].name != null
           ? ListView.builder(
               itemCount: takimlar.length,
@@ -47,19 +38,6 @@ class _TakimlarState extends ConsumerState<Takimlar> {
           : const Center(
               child: CircularProgressIndicator(),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: const Text("Takım oluştur"),
-        onPressed: () {
-          showDialog(
-            context: context,
-            useSafeArea: true,
-            builder: (ctx) {
-              return const TakimEkle();
-            },
-          );
-        },
-        icon: const Icon(Icons.add),
-      ),
     );
   }
 }
