@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/models/team.dart';
-import 'package:halisaha_app/view/screens/takimlar/takimDetay.dart';
+import 'package:halisaha_app/view/screens/takimlar/takim_detay.dart';
 
 class TakimCard extends ConsumerWidget {
   const TakimCard({super.key, required this.team});
