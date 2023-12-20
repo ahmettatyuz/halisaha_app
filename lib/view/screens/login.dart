@@ -34,8 +34,7 @@ class _LoginState extends ConsumerState<Login> {
   void login() async {
     String phone = "5${telefonController.text}";
     String password = parolaController.text;
-    isLoggingIn = true;
-    print("login user: "+user.role.toString());
+    print("login user: " + user.role.toString());
     try {
       if (user.role == "owner") {
         String token = await OwnerService().loginOwnerRequest(phone, password);
@@ -152,6 +151,9 @@ class _LoginState extends ConsumerState<Login> {
                             icon: Icons.sports_volleyball,
                             buttonText: "Giriş Yap",
                             onPressed: () {
+                              setState(() {
+                                isLoggingIn = true;
+                              });
                               login();
                             },
                           )

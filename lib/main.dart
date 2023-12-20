@@ -13,10 +13,12 @@ import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/home.dart';
+import 'package:halisaha_app/view/screens/oyuncular/oyuncular.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
 import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyonlar.dart';
-import 'package:halisaha_app/view/widgets/bottom_navigation.dart';
-import 'package:halisaha_app/view/widgets/modal_bottom.dart';
+import 'package:halisaha_app/view/widgets/main/bottom_navigation.dart';
+import 'package:halisaha_app/view/widgets/drawer/drawer.dart';
+import 'package:halisaha_app/view/widgets/main/modal_bottom.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -37,7 +39,11 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 AndroidOptions getAndroidOptions() => const AndroidOptions(
@@ -135,6 +141,9 @@ class _MainState extends ConsumerState<Main> {
     } else if (screen == "rezervasyonlar") {
       activeScreen = const Rezervasyonlar();
     }
+    else if (screen == "oyuncular") {
+      activeScreen = const Oyuncular();
+    }
   }
 
   @override
@@ -151,6 +160,7 @@ class _MainState extends ConsumerState<Main> {
       print("token: $value");
     });
     return Scaffold(
+      drawer: screen!="login" ? const MyDrawer():null,
       appBar: AppBar(
         title: const Text(
           "HALISAHA+",
@@ -161,18 +171,19 @@ class _MainState extends ConsumerState<Main> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          screen != "login"
-              ? IconButton(
+        actions: screen != "login"
+            ? [
+                IconButton(
                   onPressed: () {
                     showModalBottom();
                   },
                   icon: const Icon(Icons.person),
-                )
-              : const Text(""),
-        ],
+                ),
+              ]
+            : [],
       ),
       body: activeScreen,
+      extendBody: true,
       bottomNavigationBar: screen != "login" ? const BottomNavigation() : null,
     );
   }

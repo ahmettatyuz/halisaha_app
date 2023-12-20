@@ -13,7 +13,7 @@ import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/view/screens/profile/change_password.dart';
 import 'package:halisaha_app/view/screens/profile/edit_profile.dart';
 import 'package:halisaha_app/view/screens/profile/sessions.dart';
-import 'package:halisaha_app/view/widgets/profile_item.dart';
+import 'package:halisaha_app/view/widgets/profile/profile_item.dart';
 
 class Profile extends ConsumerStatefulWidget {
   const Profile({super.key});
@@ -46,52 +46,94 @@ class _ProfileState extends ConsumerState<Profile> {
             height: height * 2,
           ),
           Container(
-            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: Theme.of(context).colorScheme.primaryContainer,
-            ),
-            child: user.role == "owner"
-                ? Icon(
-                    Icons.stadium,
-                    size: 150,
-                    color: Theme.of(context).colorScheme.primary,
-                  )
-                : Icon(
-                    Icons.sports_handball,
-                    size: 150,
-                    color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(50)),
+            margin: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Theme.of(context).colorScheme.primaryContainer,
                   ),
-          ),
-          SizedBox(
-            height: height,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              user.role == "owner"
-                  ? Column(
-                      children: [
-                        Text(
-                          owner.ownerFirstName!,
-                          style: Theme.of(context).textTheme.titleLarge,
+                  child: user.role == "owner"
+                      ? Icon(
+                          Icons.stadium,
+                          size: 50,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : Icon(
+                          Icons.sports_handball,
+                          size: 50,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        Text(
-                          owner.pitchName!,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                      ],
-                    )
-                  : Text(
-                      player.firstName!,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-            ],
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      user.role == "owner"
+                          ? Column(
+                              children: [
+                                Text(
+                                  owner.pitchName!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ),
+                                Text(
+                                  owner.mail!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Text(
+                                  player.firstName!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ),
+                                Text(
+                                  player.phone!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                ),
+                              ],
+                            )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: height,

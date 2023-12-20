@@ -8,7 +8,7 @@ import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/reserved_sessions_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
-import 'package:halisaha_app/view/widgets/add_session.dart';
+import 'package:halisaha_app/view/widgets/session/add_session.dart';
 import 'package:toastification/toastification.dart';
 
 class SessionCard extends ConsumerStatefulWidget {
@@ -45,23 +45,25 @@ class _SessionCardState extends ConsumerState<SessionCard> {
     if (!widget.dismissible) {
       final user = ref.watch(userProvider);
       return InkWell(
-        onTap: () {
-          if (user.role == "player") {
-            showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(
-                const Duration(days: 30),
-              ),
-            ).then((value) {
-              if (value != null) {
-                ReserveSession().reserveSession(
-                    value.toString().split(" ")[0], widget.id, ref.watch(userProvider).id!);
+        onTap: user.role == "player"
+            ? () {
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(
+                    const Duration(days: 30),
+                  ),
+                ).then((value) {
+                  if (value != null) {
+                    ReserveSessionService().reserveSession(
+                        value.toString().split(" ")[0],
+                        widget.id,
+                        ref.watch(userProvider).id!);
+                  }
+                });
               }
-            });
-          }
-        },
+            : null,
         child: Card(
           // color: Colors.green.shade100,
           margin: const EdgeInsets.symmetric(vertical: 10),

@@ -7,12 +7,12 @@ class ProfileItem extends StatelessWidget {
     super.key,
     required this.icon,
     required this.label,
-    required this.onPressedFunction,
+    this.onPressedFunction,
     this.color="green",
   });
   final IconData icon;
   final String label;
-  final void Function() onPressedFunction;
+  final void Function()? onPressedFunction;
   final String color;
   Color? backgroundColor;
   @override

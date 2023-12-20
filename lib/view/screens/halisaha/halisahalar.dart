@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/owners_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
-import 'package:halisaha_app/view/widgets/halisaha_card.dart';
+import 'package:halisaha_app/view/widgets/halisaha/halisaha_card.dart';
 
 class Halisahalar extends ConsumerStatefulWidget {
   const Halisahalar({super.key});

@@ -87,4 +87,22 @@ class PlayerService {
       throw (e);
     }
   }
+
+  Future<List<Player>> getAllPlayers() async {
+    // try {
+    final response = await dio.get("$API_BASEURL/api/player/");
+
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print(response.data);
+
+    List<dynamic> json = response.data;
+    return json.map((e) => Player.fromJson(e)).toList();
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
 }

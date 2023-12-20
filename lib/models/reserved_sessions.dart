@@ -37,8 +37,8 @@ class ReservedSession {
       id: json["id"],
       date: json["date"],
       sessionId: json["sessionId"],
-      playerId: json["playerId"],
-      player: json["player"] != null ? Player.fromJson(json["player"]) : null,
+      playerId: json["teamId"],
+      player: json["player"] != null ? Player.fromJson(json["team"]) : null,
       session:
           json["session"] != null ? Session.fromJson(json["session"]) : null,
       createDate: json["createDate"] != null
@@ -51,8 +51,8 @@ class ReservedSession {
         "id": id,
         "date": date.toString(),
         "sessionId": sessionId,
-        "playerId": playerId,
-        "player": player,
+        "teamId": playerId,
+        "team": player,
         "session": session,
         "createDate": createDate.toString(),
       };

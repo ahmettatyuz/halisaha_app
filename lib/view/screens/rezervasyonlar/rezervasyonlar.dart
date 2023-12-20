@@ -4,8 +4,8 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/reserved_sessions.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/reserved_sessions_service.dart';
-import 'package:halisaha_app/view/widgets/rezervasyon_owner.dart';
-import 'package:halisaha_app/view/widgets/rezervasyon_player.dart';
+import 'package:halisaha_app/view/widgets/rezervasyon/rezervasyon_owner.dart';
+import 'package:halisaha_app/view/widgets/rezervasyon/rezervasyon_player.dart';
 
 class Rezervasyonlar extends ConsumerStatefulWidget {
   const Rezervasyonlar({super.key});
@@ -15,7 +15,7 @@ class Rezervasyonlar extends ConsumerStatefulWidget {
 }
 
 class _RezervasyonlarState extends ConsumerState<Rezervasyonlar> {
-  ReserveSession reserveService = ReserveSession();
+  ReserveSessionService reserveService = ReserveSessionService();
 
   @override
   Widget build(BuildContext context) {

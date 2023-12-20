@@ -1,7 +1,7 @@
 import 'package:halisaha_app/global/constants/constants.dart';
 import 'package:halisaha_app/models/reserved_sessions.dart';
 
-class ReserveSession {
+class ReserveSessionService {
   Future<ReservedSession> reserveSession(
       String date, int sessionId, String playerId) async {
     try {
@@ -10,7 +10,7 @@ class ReserveSession {
         "id": 0,
         "date": date,
         "sessionId": sessionId,
-        "playerId": playerId,
+        "teamId": playerId,
         "createDate": "2023-11-29T18:51:38.405Z"
       });
 
@@ -29,7 +29,7 @@ class ReserveSession {
   Future<List<ReservedSession>> getReservedSessionForPlayer(String playerId) async {
     // try {
       final response = await dio.get(
-          "$API_BASEURL/api/reservedsession/PlayerReservedSessions?playerId=$playerId");
+          "$API_BASEURL/api/reservedsession/PlayerReservedSessions?teamId=$playerId");
 
       if (response.statusCode != 200) {
         throw (response.data);

@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/session_service.dart';
-import 'package:halisaha_app/view/widgets/session_card.dart';
+import 'package:halisaha_app/view/widgets/session/session_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Halisaha extends ConsumerStatefulWidget {
