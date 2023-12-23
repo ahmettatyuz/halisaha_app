@@ -28,7 +28,7 @@ class Team {
         id: json["id"],
         name: json["name"],
         captainPlayer: json["captainPlayer"],
-        players: json["players"] == null ? [] : List<Player>.from(json["players"]!.map((x) => Player.fromJson(x))),
+        players: json["players"] == null || json["players"][0]==null ? [] : List<Player>.from(json["players"]!.map((x) => Player.fromJson(x))),
         reservedSessions: json["reservedSessions"] == null ? [] : List<ReservedSession>.from(json["reservedSessions"]!.map((x) => ReservedSession.fromJson(x))),
         createDate: json["createDate"] == null ? null : DateTime.parse(json["createDate"]),
     );
@@ -39,6 +39,6 @@ class Team {
         "captainPlayer": captainPlayer,
         "players": players == null ? [] : List<dynamic>.from(players!.map((x) => x.toJson())),
         "reservedSessions": reservedSessions == null ? [] : List<dynamic>.from(reservedSessions!.map((x) => x.toJson())),
-        "createDate": createDate?.toIso8601String(),
+        "createDate": createDate?.toString(),
     };
 }

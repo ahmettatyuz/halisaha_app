@@ -17,9 +17,12 @@ class TakimCard extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Image.asset(
-                "assets/icons/team.png",
-                scale: 5,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0,20,0,5),
+                child: Image.asset(
+                  "assets/icons/shield.png",
+                  scale: 6,
+                ),
               ),
               Column(
                 children: [

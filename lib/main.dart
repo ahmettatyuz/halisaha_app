@@ -84,7 +84,6 @@ class _MainState extends ConsumerState<Main> {
 
   void showModalBottom() {
     showModalBottomSheet<void>(
-      // isScrollControlled: true,
       useSafeArea: true,
       context: context,
       builder: (ctx) {
@@ -139,8 +138,7 @@ class _MainState extends ConsumerState<Main> {
       activeScreen = const Halisahalar();
     } else if (screen == "rezervasyonlar") {
       // activeScreen = const Rezervasyonlar();
-    }
-    else if (screen == "oyuncular") {
+    } else if (screen == "oyuncular") {
       activeScreen = const Oyuncular();
     }
   }
@@ -181,19 +179,21 @@ class _MainState extends ConsumerState<Main> {
               ]
             : [],
       ),
-      floatingActionButton: screen == "takimlar" ? FloatingActionButton.extended(
-        label: const Text("Takım oluştur"),
-        onPressed: () {
-          showDialog(
-            context: context,
-            useSafeArea: true,
-            builder: (ctx) {
-              return const TakimEkle();
-            },
-          );
-        },
-        icon: const Icon(Icons.add),
-      ):null,
+      floatingActionButton: screen == "takimlar"
+          ? FloatingActionButton.extended(
+              label: const Text("Takım oluştur"),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  useSafeArea: true,
+                  builder: (ctx) {
+                    return const TakimEkle();
+                  },
+                );
+              },
+              icon: const Icon(Icons.add),
+            )
+          : null,
       body: activeScreen,
       extendBody: true,
       bottomNavigationBar: screen != "login" ? const BottomNavigation() : null,

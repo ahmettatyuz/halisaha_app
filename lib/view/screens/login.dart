@@ -44,11 +44,11 @@ class _LoginState extends ConsumerState<Login> {
           ref.read(userProvider.notifier).userState(user);
           final owner = await ownerService.getOwnerById(user.id!);
           ref.read(ownerProvider.notifier).ownerState(owner);
-          print("login ekranından manuel giriş woner");
+          print("login ekranından manuel giriş owner");
           print("telefon :" + owner.phone.toString());
 
           await TokenManager.setToken(token);
-          ref.read(screenProvider.notifier).setScreen("home");
+          ref.read(screenProvider.notifier).setScreen("halisahalar");
         } else {
           ref.read(screenProvider.notifier).setScreen("login");
           messageBox(context, "Uyarı", token.toString(), "Tamam");
@@ -65,7 +65,7 @@ class _LoginState extends ConsumerState<Login> {
           print("telefon :" + player.phone.toString());
 
           await TokenManager.setToken(token);
-          ref.read(screenProvider.notifier).setScreen("home");
+          ref.read(screenProvider.notifier).setScreen("halisahalar");
         } else {
           ref.read(screenProvider.notifier).setScreen("login");
           messageBox(context, "Uyarı", token.toString(), "Tamam");

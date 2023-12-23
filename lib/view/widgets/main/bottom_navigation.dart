@@ -18,8 +18,9 @@ class _BottomNavigationState extends ConsumerState<BottomNavigation> {
     return DotNavigationBar(
       marginR: const EdgeInsets.symmetric(vertical: 4),
       paddingR: const EdgeInsets.all(2),
-      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-      unselectedItemColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      unselectedItemColor: Theme.of(context).colorScheme.secondaryContainer,
+      selectedItemColor: Theme.of(context).colorScheme.secondaryContainer,
       onTap: (index) {
         setState(() {
           _currentIndex = index;

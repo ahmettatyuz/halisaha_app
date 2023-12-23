@@ -105,4 +105,22 @@ class PlayerService {
     //   throw (e);
     // }
   }
+
+    Future<bool> joinTeam(String playerId,String teamId) async {
+    try {
+      final response =
+          await dio.patch("$API_BASEURL/api/player/jointeam?playerId=$playerId&teamId=$teamId");
+
+      if (response.statusCode != 200) {
+        // print(team.toJson());
+        throw (response.data);
+      }
+      print(response.data);
+      print(response.statusCode);
+      return true;
+    } catch (e) {
+      print(e);
+      throw (e);
+    }
+  }
 }
