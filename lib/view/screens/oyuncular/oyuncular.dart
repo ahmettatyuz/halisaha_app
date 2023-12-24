@@ -29,7 +29,7 @@ class _OyuncularState extends ConsumerState<Oyuncular> {
                   hint: "Oyuncu Ara",
                   textChanged: (text) {
                     setState(() {
-                      
+                      print(text);
                     });
                   },
                   controller: searchText,

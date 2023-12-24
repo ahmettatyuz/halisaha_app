@@ -84,6 +84,7 @@ class _OyuncuCardState extends ConsumerState<PlayerCard> {
                         Text(widget.player.position!),
                       ],
                     ),
+                    Text(widget.player.teams!.length.toString()),
                   ],
                 )
               ],

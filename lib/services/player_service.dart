@@ -89,7 +89,6 @@ class PlayerService {
   }
 
   Future<List<Player>> getAllPlayers() async {
-    // try {
     final response = await dio.get("$API_BASEURL/api/player/");
 
     if (response.statusCode != 200) {
@@ -100,16 +99,12 @@ class PlayerService {
 
     List<dynamic> json = response.data;
     return json.map((e) => Player.fromJson(e)).toList();
-    // } catch (e) {
-    //   print(e);
-    //   throw (e);
-    // }
   }
 
-    Future<bool> joinTeam(String playerId,String teamId) async {
+  Future<bool> joinTeam(String playerId, String teamId) async {
     try {
-      final response =
-          await dio.patch("$API_BASEURL/api/player/jointeam?playerId=$playerId&teamId=$teamId");
+      final response = await dio.patch(
+          "$API_BASEURL/api/player/jointeam?playerId=$playerId&teamId=$teamId");
 
       if (response.statusCode != 200) {
         // print(team.toJson());
@@ -119,8 +114,7 @@ class PlayerService {
       print(response.statusCode);
       return true;
     } catch (e) {
-      print(e);
-      throw (e);
+      throw(e);
     }
   }
 }

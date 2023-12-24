@@ -1,43 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_badge.dart';
+import 'package:halisaha_app/view/widgets/oyuncular/takima_ekle.dart';
 
-class OyuncuDetay extends ConsumerWidget {
+class OyuncuDetay extends ConsumerStatefulWidget {
   const OyuncuDetay({super.key, required this.player});
   final Player player;
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _OyuncuDetayState();
+}
+
+class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
+  @override
+  Widget build(BuildContext context) {
     void takimaEkleModal(Player player) {
       showDialog(
-          context: context,
-          builder: (ctx) {
-            return Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "Takım Seç",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    DropdownButton(items: [], onChanged: (item) {}),
-                  ],
-                ),
-              ),
-            );
-          });
+        context: context,
+        builder: (ctx) {
+          return TakimaEkle(
+            playerId: player.id!,
+          );
+        },
+      );
     }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          player.firstName!,
+          widget.player.firstName!,
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryColor,
@@ -55,7 +48,7 @@ class OyuncuDetay extends ConsumerWidget {
               ),
             ),
             Text(
-              player.firstName!,
+              widget.player.firstName!,
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold),
@@ -90,7 +83,7 @@ class OyuncuDetay extends ConsumerWidget {
             OyuncuBadge(
               icon: Icons.sports_handball,
               text1: "Mevki: ",
-              text2: player.position!,
+              text2: widget.player.position!,
             ),
             const SizedBox(
               height: 10,
@@ -98,21 +91,21 @@ class OyuncuDetay extends ConsumerWidget {
             OyuncuBadge(
               icon: Icons.location_on,
               text1: "Konum: ",
-              text2: Owner.turkishCities[player.city].toString(),
+              text2: Owner.turkishCities[widget.player.city].toString(),
             ),
             const SizedBox(
               height: 10,
             ),
             ElevatedButton.icon(
               onPressed: () {
-                takimaEkleModal(player);
+                takimaEkleModal(widget.player);
               },
               label: const Text("Takıma Ekle"),
               icon: const Icon(Icons.add),
               style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white),
-            )
+            ),
           ],
         ),
       ),

@@ -4,8 +4,7 @@ import 'package:halisaha_app/models/team.dart';
 class TeamsService {
   Future<List<Team>> getAllTeams() async {
     // try {
-    final response = await dio.get(
-        "$API_BASEURL/api/team/");
+    final response = await dio.get("$API_BASEURL/api/team/");
 
     if (response.statusCode != 200) {
       throw (response.data);
@@ -21,12 +20,14 @@ class TeamsService {
     // }
   }
 
-
   Future<Team> createTeam(Team team) async {
     try {
-      final response =
-          await dio.post("$API_BASEURL/api/team/", data: team.toJson());
-
+      final response = await dio.post("$API_BASEURL/api/team/", data: {
+        "id": team.id,
+        "captainPlayer": team.captainPlayer,
+        "name": team.name,
+        "createDate": "2023-12-24T11:56:49.401Z"
+      });
       if (response.statusCode != 200) {
         print(team.toJson());
         throw (response.data);
@@ -39,5 +40,4 @@ class TeamsService {
       throw (e);
     }
   }
-
 }
