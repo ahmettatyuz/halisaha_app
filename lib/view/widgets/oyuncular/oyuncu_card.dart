@@ -16,12 +16,12 @@ class _OyuncuCardState extends ConsumerState<PlayerCard> {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () {
+        onTap: widget.player.teams!.isNotEmpty ? () {
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (ctx) => OyuncuDetay(player: widget.player)));
-        },
+        }:null,
         child: Column(
           children: [
             Row(
@@ -84,7 +84,21 @@ class _OyuncuCardState extends ConsumerState<PlayerCard> {
                         Text(widget.player.position!),
                       ],
                     ),
-                    Text(widget.player.teams!.length.toString()),
+                    const SizedBox(height: 5,),
+                    Row(
+                      children: [
+                        Text(
+                          "Takımlar: ",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).primaryColor),
+                        ),
+                        Text(widget.player.teams!.length.toString()),
+                      ],
+                    )
                   ],
                 )
               ],

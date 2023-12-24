@@ -5,6 +5,7 @@ import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_badge.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/takima_ekle.dart';
+import 'package:halisaha_app/view/widgets/takimlar/takim_card.dart';
 
 class OyuncuDetay extends ConsumerStatefulWidget {
   const OyuncuDetay({super.key, required this.player});
@@ -35,6 +36,19 @@ class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).primaryColor,
               ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          takimaEkleModal(widget.player);
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
+        label: const Row(
+          children: [
+            Icon(Icons.add),
+            Text("Takıma Ekle"),
+          ],
         ),
       ),
       body: Center(
@@ -96,15 +110,31 @@ class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-                takimaEkleModal(widget.player);
-              },
-              label: const Text("Takıma Ekle"),
-              icon: const Icon(Icons.add),
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white),
+            widget.player.teams!.isNotEmpty
+                ? Text(
+                    "Oyuncunun Bulunduğu Takımlar",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Theme.of(context).colorScheme.primary),
+                  )
+                : Container(),
+            const SizedBox(
+              height: 10,
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (ctx, index) {
+                  return Container(
+                    margin: const EdgeInsets.all(5),
+                    child: OyuncuBadge(
+                        icon: Icons.shield_outlined,
+                        text1: widget.player.teams![index].name.toString(),
+                        text2: ""),
+                  );
+                },
+                itemCount: widget.player.teams!.length,
+              ),
             ),
           ],
         ),

@@ -40,4 +40,20 @@ class TeamsService {
       throw (e);
     }
   }
+
+  Future<Team> getTeam(int id) async {
+    // try {
+    final response = await dio.get("$API_BASEURL/api/team/$id");
+
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print(response.data);
+    return Team.fromJson(response.data);
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
 }
