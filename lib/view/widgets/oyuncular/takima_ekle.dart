@@ -17,10 +17,13 @@ class _TakimaEkleState extends ConsumerState<TakimaEkle> {
   int? selectedTeam;
   @override
   Widget build(BuildContext context) {
-    var teams = ref.watch(playerProvider).teams;
-    if (teams != null && teams.isNotEmpty && selectedTeam == null) {
+    var teams = ref.watch(playerProvider).teams!.where((team) => team.captainPlayer == ref.watch(playerProvider).id).toList();
+    if (teams.isNotEmpty && selectedTeam == null) {
       selectedTeam = teams[0].id;
     }
+    print("**************");
+    print(teams.length);
+
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -43,12 +46,9 @@ class _TakimaEkleState extends ConsumerState<TakimaEkle> {
             ),
             DropdownButton(
               value: selectedTeam,
-              items: teams!.map(
+              items: teams.where((element) => element.captainPlayer == ref.watch(playerProvider).id).map(
                 (e) {
-                  return DropdownMenuItem(
-                    value: e.id,
-                    child: Text(e.name!),
-                  );
+                    return DropdownMenuItem(value: e.id,child: Text(e.name!),);
                 },
               ).toList(),
               onChanged: (item) {
@@ -69,6 +69,9 @@ class _TakimaEkleState extends ConsumerState<TakimaEkle> {
                   icon: Icons.add,
                   onPressed: () async {
                     try {
+                      if (selectedTeam == null) {
+                        throw ("Lütfen bir takım seçiniz !");
+                      }
                       if (await PlayerService().joinTeam(
                           widget.playerId.toString(),
                           selectedTeam.toString())) {
@@ -77,8 +80,8 @@ class _TakimaEkleState extends ConsumerState<TakimaEkle> {
                         Navigator.pop(context);
                       }
                     } catch (e) {
-                      toast(context, "Takım", e,
-                          ToastificationType.error, 3, Icons.error);
+                      toast(context, "Takım", e, ToastificationType.error, 3,
+                          Icons.error);
                     }
                   },
                 ),

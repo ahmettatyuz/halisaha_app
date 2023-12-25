@@ -43,8 +43,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController isyeriController = TextEditingController();
   TextEditingController adresController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
-  String selectedCity = "01";
-
+  String selectedCity = "00";
 
   void updateOwnerProfile() async {
     try {
@@ -95,11 +94,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   Widget build(BuildContext context) {
     user = ref.watch(userProvider);
-    if (user.role=="owner") {
+    if (user.role == "owner") {
       owner = ref.watch(ownerProvider);
       adSoyadController.text = owner.ownerFirstName!;
       telefonController.text = owner.phone!;
-      selectedCity = owner.city!;
+      if (selectedCity == "00") {
+        selectedCity = owner.city!;
+      }
       epostaController.text = owner.mail!;
       isyeriController.text = owner.pitchName!;
       adresController.text = owner.address!;
@@ -120,7 +121,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       player = ref.watch(playerProvider);
       adSoyadController.text = player.firstName!;
       telefonController.text = player.phone!;
-      selectedCity = player.city!;
+      if (selectedCity == "00") {
+        selectedCity = player.city!;
+      }
       epostaController.text = player.mail!;
       adresController.text = player.address!;
     }
@@ -203,7 +206,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             const SizedBox(
               height: 10,
             ),
-            if (user.role=="player")
+            if (user.role == "player")
               Column(
                 children: [
                   Padding(
@@ -230,7 +233,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             const SizedBox(
               height: 10,
             ),
-            if (user.role=="owner")
+            if (user.role == "owner")
               Column(
                 children: [
                   Container(
@@ -314,7 +317,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
               icon: Icons.save,
               buttonText: "Kaydet",
               onPressed: () {
-                if (user.role=="owner") {
+                if (user.role == "owner") {
                   updateOwnerProfile();
                 } else {
                   updatePlayerProfile();

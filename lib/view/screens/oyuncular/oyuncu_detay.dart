@@ -5,7 +5,6 @@ import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_badge.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/takima_ekle.dart';
-import 'package:halisaha_app/view/widgets/takimlar/takim_card.dart';
 
 class OyuncuDetay extends ConsumerStatefulWidget {
   const OyuncuDetay({super.key, required this.player});
