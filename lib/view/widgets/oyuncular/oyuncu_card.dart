@@ -85,6 +85,7 @@ class _OyuncuCardState extends ConsumerState<PlayerCard> {
                       ],
                     ),
                     const SizedBox(height: 5,),
+                    widget.player.teams!.isNotEmpty ?
                     Row(
                       children: [
                         Text(
@@ -98,35 +99,32 @@ class _OyuncuCardState extends ConsumerState<PlayerCard> {
                         ),
                         Text(widget.player.teams!.length.toString()),
                       ],
-                    )
+                    ):Container(),
                   ],
                 )
               ],
             ),
             const Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        widget.player.phone!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.call,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 18,
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    widget.player.phone!,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 10,

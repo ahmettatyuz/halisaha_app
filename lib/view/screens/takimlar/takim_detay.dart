@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/screen_provider.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/team.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_card.dart';
 
@@ -55,14 +56,14 @@ class _TakimDetayState extends ConsumerState<TakimDetay> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: widget.team.captainPlayer == ref.watch(playerProvider).id ? FloatingActionButton.extended(
         label: const Text("Oyuncu Ekle"),
         icon: const Icon(Icons.add),
         onPressed: () {
           Navigator.popUntil(context, (route) => route.isFirst);
           ref.read(screenProvider.notifier).setScreen("oyuncular");
         },
-      ),
+      ):null,
     );
   }
 }

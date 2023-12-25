@@ -11,11 +11,14 @@ class TakimCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Card(
       child: InkWell(
-        
-        onTap:team.players!.isNotEmpty ? () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (ctx) => TakimDetay(team: team)));
-        }:null,
+        onTap: team.players!.isNotEmpty
+            ? () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => TakimDetay(team: team)));
+              }
+            : null,
         child: Column(
           children: [
             Row(
@@ -71,18 +74,29 @@ class TakimCard extends ConsumerWidget {
                             )
                           : Container(),
                     ),
+                    team.captainPlayer == ref.watch(playerProvider).id
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Row(
+                              children: [
+                                Icon(Icons.shield,color: Theme.of(context).colorScheme.primary,),
+                                Text(
+                                  "Sizin Takımınız",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                        color:
+                                            Theme.of(context).colorScheme.primary,
+                                      ),
+                                ),
+                              ],
+                            ))
+                        : Container()
                   ],
                 )
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                team.captainPlayer.toString() == ref.watch(userProvider).id
-                    ? const Icon(Icons.shield_outlined)
-                    : Container()
-              ],
-            )
           ],
         ),
       ),
