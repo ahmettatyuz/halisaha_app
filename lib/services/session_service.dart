@@ -1,5 +1,4 @@
 import 'package:halisaha_app/global/constants/constants.dart';
-import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/session.dart';
 
 class SessionService {
@@ -30,27 +29,13 @@ class SessionService {
   Future<List<Session>> getSessions(int ownerId) async {
     try {
       final response =
-          await dio.get("$API_BASEURL/api/session?ownerId=$ownerId");
+          await dio.get("$API_BASEURL/api/session/owner?ownerId=$ownerId");
 
       if (response.statusCode != 200) {
         throw (response.data);
       }
       List<dynamic> json = response.data;
       return json.map((e) => Session.fromJson(e)).toList();
-    } catch (e) {
-      throw (e);
-    }
-  }
-
-    Future<Owner> getOwnerBySessionId(int sessionId) async {
-    try {
-      final response =
-          await dio.get("$API_BASEURL/api/session?sessionId=$sessionId");
-
-      if (response.statusCode != 200) {
-        throw (response.data);
-      }
-      return Owner.fromJson(response.data);
     } catch (e) {
       throw (e);
     }
@@ -90,5 +75,17 @@ class SessionService {
     }
   }
 
-  
+  Future<Session> getSessionById(int id) async {
+    try {
+      final response =
+          await dio.get("$API_BASEURL/api/Session/id?sessionId=$id");
+
+      if (response.statusCode != 200) {
+        throw (response.data);
+      }
+      return Session.fromJson(response.data);
+    } catch (e) {
+      throw (e);
+    }
+  }
 }

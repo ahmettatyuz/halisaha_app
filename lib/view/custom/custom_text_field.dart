@@ -9,7 +9,8 @@ class CustomTextField extends StatelessWidget {
       this.prefixText,
       this.keyboard,
       this.password,
-      this.icon});
+      this.icon,
+      this.changed,});
 
   final TextEditingController? controller;
   final String? hintText;
@@ -18,10 +19,12 @@ class CustomTextField extends StatelessWidget {
   final String? keyboard;
   final bool? password;
   final IconData? icon;
+  final void Function(String text)? changed;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: changed,
       controller: controller,
       decoration: InputDecoration(
         label: Text(hintText != null ? hintText! : ""),

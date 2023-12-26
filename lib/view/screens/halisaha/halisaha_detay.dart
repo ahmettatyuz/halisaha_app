@@ -42,7 +42,7 @@ class _HalisahaState extends ConsumerState<Halisaha> {
           Container(
             clipBehavior: Clip.antiAlias,
             width: MediaQuery.of(context).size.width - 20,
-            height: 300,
+            height: 230,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -77,6 +77,7 @@ class _HalisahaState extends ConsumerState<Halisaha> {
               textAlign: TextAlign.center,
             ),
           ),
+          const Text("Rezerve etmek istediğiniz saate dokunun"),
           FutureBuilder(
             future: sessionService.getSessions(widget.owner.id!),
             builder: (context, snapshot) {

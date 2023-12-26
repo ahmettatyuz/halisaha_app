@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halisaha_app/models/player.dart';
 import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_search_bar.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_card.dart';
@@ -20,19 +21,24 @@ class _OyuncularState extends ConsumerState<Oyuncular> {
         future: PlayerService().getAllPlayers(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            List<Player> players = snapshot.data!;
+            players = players
+                .where(
+                  (element) => element.firstName!
+                      .toLowerCase()
+                      .contains(searchText.text.toLowerCase()),
+                )
+                .toList();
             return Column(
               children: [
-                const SizedBox(
-                  height: 15,
-                ),
                 CustomSearchBar(
+                  controller: searchText,
                   hint: "Oyuncu Ara",
                   textChanged: (text) {
                     setState(() {
-                      print(text);
+                      
                     });
                   },
-                  controller: searchText,
                 ),
                 const SizedBox(
                   height: 15,
@@ -40,13 +46,9 @@ class _OyuncularState extends ConsumerState<Oyuncular> {
                 Expanded(
                   child: ListView.builder(
                     itemBuilder: (context, index) {
-                      if (snapshot.data![index].firstName!.toLowerCase()
-                          .contains(searchText.text.toLowerCase())) {
-                        return PlayerCard(player: snapshot.data![index]);
-                      }
-                      return null;
+                      return PlayerCard(player: players[index]);
                     },
-                    itemCount: snapshot.data!.length,
+                    itemCount: players.length,
                   ),
                 ),
               ],

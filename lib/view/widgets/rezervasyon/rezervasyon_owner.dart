@@ -39,12 +39,6 @@ class RezervasyonOwner extends ConsumerWidget {
                       Icons.person,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    Text(
-                      session.player!.firstName!.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                    ),
                   ],
                 ),
                 const SizedBox(
@@ -61,13 +55,13 @@ class RezervasyonOwner extends ConsumerWidget {
                       const SizedBox(
                         width: 10,
                       ),
-                      Text(
-                        session.player!.phone!.toString(),
-                        maxLines: 2,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
+                      // Text(
+                      //   session.player!.phone!.toString(),
+                      //   maxLines: 2,
+                      //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      //         color: Theme.of(context).colorScheme.primary,
+                      //       ),
+                      // ),
                     ],
                   ),
                 ),

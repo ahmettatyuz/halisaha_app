@@ -8,6 +8,7 @@ import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/reserved_sessions_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
+import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyon_olustur.dart';
 import 'package:halisaha_app/view/widgets/session/add_session.dart';
 import 'package:toastification/toastification.dart';
 
@@ -27,6 +28,47 @@ class SessionCard extends ConsumerStatefulWidget {
 }
 
 class _SessionCardState extends ConsumerState<SessionCard> {
+  Card card() {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Container(
+        padding: const EdgeInsets.all(25),
+        decoration: const BoxDecoration(),
+        width: double.infinity,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                widget.index>=0 ?
+                Text(
+                  "${widget.index + 1}. Seans",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                ):Container(),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  widget.time,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleLarge!
+                      .copyWith(color: Theme.of(context).colorScheme.secondary),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Image.asset("assets/icons/clock.png",scale: 14,),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final sessionService = SessionService();
@@ -47,62 +89,25 @@ class _SessionCardState extends ConsumerState<SessionCard> {
       return InkWell(
         onTap: user.role == "player"
             ? () {
-                showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(
-                    const Duration(days: 30),
-                  ),
-                ).then((value) {
-                  if (value != null) {
-                    ReserveSessionService().reserveSession(
-                        value.toString().split(" ")[0],
-                        widget.id,
-                        ref.watch(userProvider).id!);
-                  }
-                });
+                // showDatePicker(
+                //   context: context,
+                //   initialDate: DateTime.now(),
+                //   firstDate: DateTime.now(),
+                //   lastDate: DateTime.now().add(
+                //     const Duration(days: 30),
+                //   ),
+                // ).then((value) {
+                //   if (value != null) {
+                //     ReserveSessionService().reserveSession(
+                //         value.toString().split(" ")[0],
+                //         widget.id,
+                //         ref.watch(userProvider).id!);
+                //   }
+                // });
+                Navigator.push(context, MaterialPageRoute(builder: (ctx)=>RezervasyonOlustur(sessionId: widget.id)));
               }
             : null,
-        child: Card(
-          // color: Colors.green.shade100,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: Container(
-            padding: const EdgeInsets.all(25),
-            decoration: const BoxDecoration(),
-            width: double.infinity,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${widget.index + 1}. Seans",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      widget.time,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Icon(
-                      Icons.watch_later,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: card(),
       );
     } else {
       return Dismissible(
@@ -157,45 +162,7 @@ class _SessionCardState extends ConsumerState<SessionCard> {
             return false;
           }
         },
-        child: Card(
-          // color: Colors.green.shade100,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: Container(
-            padding: const EdgeInsets.all(25),
-            decoration: const BoxDecoration(),
-            width: double.infinity,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${widget.index + 1}. Seans",
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      widget.time,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.secondary),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Icon(
-                      Icons.watch_later,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
+        child: card(),
       );
     }
   }
