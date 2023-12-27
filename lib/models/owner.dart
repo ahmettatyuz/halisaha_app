@@ -22,6 +22,7 @@ class Owner {
   int? point;
   String? coordinate1;
   String? coordinate2;
+  int? transport;
   DateTime? createDate;
 
   Owner({
@@ -38,6 +39,7 @@ class Owner {
     this.point,
     this.coordinate1,
     this.coordinate2,
+    this.transport,
     this.createDate,
   });
   static Map<String, String> turkishCities = {
@@ -138,6 +140,7 @@ class Owner {
         point: json["point"],
         coordinate1: json["coordinate1"],
         coordinate2: json["coordinate2"],
+        transport: json["transport"],
         createDate: DateTime.parse(json["createDate"]),
       );
 
@@ -155,6 +158,7 @@ class Owner {
         "point": point,
         "coordinate1": coordinate1,
         "coordinate2": coordinate2,
+        "transport": transport,
         "createDate": createDate.toString(),
       };
 }

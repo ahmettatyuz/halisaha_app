@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/player.dart';
+import 'package:halisaha_app/models/team.dart';
+import 'package:halisaha_app/services/team_service.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/oyuncu_badge.dart';
 import 'package:halisaha_app/view/widgets/oyuncular/takima_ekle.dart';
 
@@ -16,12 +21,15 @@ class OyuncuDetay extends ConsumerStatefulWidget {
 class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
   @override
   Widget build(BuildContext context) {
-    void takimaEkleModal(Player player) {
+    void takimaEkleModal(Player player) async {
+      List<Team> teams = await TeamsService().getPlayersTeam(ref.watch(playerProvider).id!);
+      print(player.id);
       showDialog(
         context: context,
         builder: (ctx) {
           return TakimaEkle(
             playerId: player.id!,
+            teams: teams,
           );
         },
       );

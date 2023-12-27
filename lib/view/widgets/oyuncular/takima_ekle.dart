@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
+import 'package:halisaha_app/models/team.dart';
 import 'package:halisaha_app/services/player_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:toastification/toastification.dart';
 
 class TakimaEkle extends ConsumerStatefulWidget {
-  const TakimaEkle({super.key, required this.playerId});
+  const TakimaEkle({super.key, required this.playerId,required this.teams});
   final int playerId;
+  final List<Team> teams;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TakimaEkleState();
 }
@@ -17,7 +19,8 @@ class _TakimaEkleState extends ConsumerState<TakimaEkle> {
   int? selectedTeam;
   @override
   Widget build(BuildContext context) {
-    var teams = ref.watch(playerProvider).teams!.where((team) => team.captainPlayer == ref.watch(playerProvider).id).toList();
+  List<Team> teams = widget.teams;
+    // buraya geldiğinde yeni eklenen takımlar gözükmüyor çünkü ref.read yapılması gerekiyor.
     if (teams.isNotEmpty && selectedTeam == null) {
       selectedTeam = teams[0].id;
     }

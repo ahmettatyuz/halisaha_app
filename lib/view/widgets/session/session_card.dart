@@ -2,10 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:halisaha_app/global/providers/rezervasyon_provider.dart';
 import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/session.dart';
-import 'package:halisaha_app/services/reserved_sessions_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyon_olustur.dart';
@@ -40,13 +40,14 @@ class _SessionCardState extends ConsumerState<SessionCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                widget.index>=0 ?
-                Text(
-                  "${widget.index + 1}. Seans",
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ):Container(),
+                widget.index >= 0
+                    ? Text(
+                        "${widget.index + 1}. Seans",
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      )
+                    : Container(),
                 const SizedBox(
                   width: 10,
                 ),
@@ -60,7 +61,10 @@ class _SessionCardState extends ConsumerState<SessionCard> {
                 const SizedBox(
                   width: 10,
                 ),
-                Image.asset("assets/icons/clock.png",scale: 14,),
+                Image.asset(
+                  "assets/icons/clock.png",
+                  scale: 14,
+                ),
               ],
             ),
           ],
@@ -104,7 +108,13 @@ class _SessionCardState extends ConsumerState<SessionCard> {
                 //         ref.watch(userProvider).id!);
                 //   }
                 // });
-                Navigator.push(context, MaterialPageRoute(builder: (ctx)=>RezervasyonOlustur(sessionId: widget.id)));
+                ref.read(evSahibiProvider.notifier).setTakim(null);
+                ref.read(deplasmanProvider.notifier).setRakipTakim(null);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) =>
+                            RezervasyonOlustur(sessionId: widget.id)));
               }
             : null,
         child: card(),

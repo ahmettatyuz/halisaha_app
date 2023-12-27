@@ -56,4 +56,23 @@ class TeamsService {
     //   throw (e);
     // }
   }
+
+  Future<List<Team>> getPlayersTeam(int playerId) async {
+    // try {
+    final response =
+        await dio.get("$API_BASEURL/api/team/playersTeam?playerId=$playerId");
+
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print(response.data);
+
+    List<dynamic> json = response.data;
+    return json.map((e) => Team.fromJson(e)).toList();
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
 }
