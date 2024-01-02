@@ -93,28 +93,36 @@ class _RegisterState extends ConsumerState<Register> {
         isyeri.isNotEmpty &&
         adres.isNotEmpty) {
       if (parola1 == parola2) {
-        if (markers.isNotEmpty) {
-          OwnerService()
-              .register(
-                  parola1,
-                  adSoyad,
-                  eposta,
-                  telefon,
-                  selectedCity,
-                  adres,
-                  isyeri,
-                  webAdres,
-                  markers.first.position.latitude.toString(),
-                  markers.first.position.longitude.toString())
-              .then((value) {
-            if (value[0] == "200") {
-              Navigator.pop(context);
+        if (kontrolTelefonNumarasi(telefon)) {
+          if (kontrolEposta(eposta)) {
+            if (markers.isNotEmpty) {
+              OwnerService()
+                  .register(
+                      parola1,
+                      adSoyad,
+                      eposta,
+                      telefon,
+                      selectedCity,
+                      adres,
+                      isyeri,
+                      webAdres,
+                      markers.first.position.latitude.toString(),
+                      markers.first.position.longitude.toString())
+                  .then((value) {
+                if (value[0] == "200") {
+                  Navigator.pop(context);
+                } else {
+                  messageBox(context, "Uyarı", value[1], "Tamam");
+                }
+              });
             } else {
-              messageBox(context, "Uyarı", value[1], "Tamam");
+              message = "Lütfen haritadan halısahanızın konumunu seçin.";
             }
-          });
+          } else {
+            message = "E Posta adresi geçersiz.";
+          }
         } else {
-          message = "Lütfen haritadan halısahanızın konumunu seçin.";
+          message = "Telefon numarası geçersiz.";
         }
       } else {
         message = "Parolalar uyuşmuyor.";
@@ -125,6 +133,19 @@ class _RegisterState extends ConsumerState<Register> {
     if (message != "") {
       messageBox(context, "Uyarı", message, "Tamam");
     }
+  }
+
+  bool kontrolTelefonNumarasi(String telefonNumarasi) {
+    // Türk telefon numarası için regex
+    RegExp regex = RegExp(r'^[5][0-9]{9}$');
+
+    // Regex eşleşmesini kontrol et
+    return regex.hasMatch(telefonNumarasi);
+  }
+
+  bool kontrolEposta(String eposta) {
+    RegExp regex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return regex.hasMatch(eposta);
   }
 
   void _registerPlayer() async {
@@ -140,22 +161,30 @@ class _RegisterState extends ConsumerState<Register> {
         double.tryParse(telefon) != null &&
         eposta.isNotEmpty &&
         parola1.isNotEmpty) {
-      if (parola1 == parola2) {
-        UserService()
-            .registerPlayerRequest(
-                parola1, adSoyad, eposta, telefon, selectedCity, adres, "")
-            .then((value) {
-          if (value[0] == "200") {
-            Navigator.pop(context);
+      if (kontrolTelefonNumarasi(telefon)) {
+        if (kontrolEposta(eposta)) {
+          if (parola1 == parola2) {
+            UserService()
+                .registerPlayerRequest(
+                    parola1, adSoyad, eposta, telefon, selectedCity, adres, "")
+                .then((value) {
+              if (value[0] == "200") {
+                Navigator.pop(context);
+              } else {
+                messageBox(context, "Uyarı", value[1], "Tamam");
+              }
+            });
           } else {
-            messageBox(context, "Uyarı", value[1], "Tamam");
+            message = "Parolalar uyuşmuyor.";
           }
-        });
+        } else {
+          message = "E Posta adresi geçersiz.";
+        }
       } else {
-        message = "Parolalar uyuşmuyor";
+        message = "Telefon numarası geçersiz.";
       }
     } else {
-      message = "Lütfen tüm alanlara geçerli değerleri girin";
+      message = "Lütfen tüm alanlara geçerli değerleri girin.";
     }
     if (message != "") {
       messageBox(context, "Uyaro", message, "Tamam");

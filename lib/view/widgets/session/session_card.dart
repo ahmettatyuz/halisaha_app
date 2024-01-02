@@ -7,6 +7,7 @@ import 'package:halisaha_app/global/providers/session_provider.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/session.dart';
 import 'package:halisaha_app/services/session_service.dart';
+import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyon_olustur.dart';
 import 'package:halisaha_app/view/widgets/session/add_session.dart';
@@ -157,9 +158,41 @@ class _SessionCardState extends ConsumerState<SessionCard> {
         ),
         key: UniqueKey(),
         confirmDismiss: (direction) async {
+          bool delete = false;
           if (direction == DismissDirection.endToStart) {
-            removeSession(widget.id);
-            return true;
+            showDialog(
+              context: context,
+              useSafeArea: true,
+              builder: (ctx) => AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("Seansı silmek istediğinizden emin misiniz ?"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text("İptal"),
+                        ),
+                        CustomButton(
+                          buttonText: "Sil",
+                          icon: Icons.delete,
+                          onPressed: () {
+                            removeSession(widget.id);
+                            delete = true;
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+            return delete;
           } else {
             showModalBottomSheet<void>(
               useSafeArea: true,

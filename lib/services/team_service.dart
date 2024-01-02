@@ -75,4 +75,59 @@ class TeamsService {
     //   throw (e);
     // }
   }
+
+  Future<bool> deletePlayerFromTeam(int playerId, int teamId) async {
+// try {
+    final response = await dio.delete(
+        "$API_BASEURL/api/Team/player?playerId=$playerId&teamId=$teamId");
+
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print(response.data);
+    return true;
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
+
+  Future<bool> deleteTeam(int teamId, int playerId) async {
+// try {
+    print(teamId);
+    print(playerId);
+    final response =
+        await dio.delete("$API_BASEURL/api/Team?id=$teamId&playerId=$playerId");
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print("silindi mi: " + response.data.toString());
+    return true;
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
+
+    Future<List<Team>> getTeamsIncludePlayer(int playerId) async {
+    // try {
+    final response = await dio.get("$API_BASEURL/api/Team/teamIncludePlayer?playerId=$playerId");
+
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print(response.data);
+
+    List<dynamic> json = response.data;
+    return json.map((e) => Team.fromJson(e)).toList();
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
+
+
 }

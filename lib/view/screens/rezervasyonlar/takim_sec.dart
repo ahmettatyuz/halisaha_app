@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/rezervasyon_provider.dart';
+import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/team.dart';
 import 'package:halisaha_app/services/team_service.dart';
 import 'package:halisaha_app/view/custom/custom_search_bar.dart';
@@ -42,7 +43,7 @@ class _TakimSecState extends ConsumerState<TakimSec> {
         ),
         Expanded(
           child: FutureBuilder(
-            future: TeamsService().getAllTeams(),
+            future: TeamsService().getTeamsIncludePlayer(ref.watch(playerProvider).id!),
             builder: ((context, snapshot) {
               if (snapshot.data != null && snapshot.data!.isNotEmpty) {
                 List<Team> teams = snapshot.data!;

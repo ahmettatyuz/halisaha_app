@@ -44,7 +44,7 @@ class TakimEkle extends ConsumerWidget {
                   print("********************************");
                   print(a);
                   print("********************************");
-                  ref.read(teamsProvider.notifier).fetchAllTeams();
+                  ref.read(teamsProvider.notifier).fetchAllTeams(ref.watch(playerProvider).id!);
                   Navigator.pop(context);
                   toast(context, "Takımlar", "Takım oluşturuldu", ToastificationType.success, 3, Icons.check);
                 },

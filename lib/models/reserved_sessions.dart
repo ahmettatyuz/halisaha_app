@@ -18,7 +18,7 @@ class ReservedSession {
   int? id;
   String? date;
   int? sessionId;
-  dynamic session;
+  Session? session;
   int? evSahibiTakimId;
   Team? evSahibiTakim;
   int? deplasmanTakimId;

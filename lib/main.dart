@@ -14,10 +14,12 @@ import 'package:halisaha_app/view/screens/halisaha/halisahalar.dart';
 import 'package:halisaha_app/view/screens/login.dart';
 import 'package:halisaha_app/view/screens/oyuncular/oyuncular.dart';
 import 'package:halisaha_app/view/screens/profile/profile.dart';
+import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyonlar.dart';
 import 'package:halisaha_app/view/screens/takimlar/takimlar.dart';
 import 'package:halisaha_app/view/widgets/main/bottom_navigation.dart';
 import 'package:halisaha_app/view/widgets/main/modal_bottom.dart';
 import 'package:halisaha_app/view/widgets/takimlar/takim_ekle.dart';
+import 'package:http/http.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -96,7 +98,6 @@ class _MainState extends ConsumerState<Main> {
     // token varsa ve geçerliyse loginState'yi günceller
     String? token = await TokenManager.getToken();
     if (token != null && TokenManager.verifyToken(token)) {
-      screen = "halisahalar";
       TokenManager.token = token;
       final user = User.fromJson(JWT.decode(token).payload);
       if (user.role == "owner") {
@@ -106,6 +107,7 @@ class _MainState extends ConsumerState<Main> {
           ref.read(ownerProvider.notifier).ownerState(owner);
           print("önceki oturumdan otomatik giriş");
           print("telefon :" + owner.phone.toString());
+          screen = "rezervasyonlar";
         } catch (e) {
           screen = "login";
         }
@@ -116,6 +118,7 @@ class _MainState extends ConsumerState<Main> {
           ref.read(playerProvider.notifier).playerState(player);
           print("önceki oturumdan otomatik giriş");
           print("telefon :" + player.phone.toString());
+          screen = "halisahalar";
         } catch (e) {
           screen = "login";
         }
@@ -137,7 +140,7 @@ class _MainState extends ConsumerState<Main> {
     } else if (screen == "halisahalar") {
       activeScreen = const Halisahalar();
     } else if (screen == "rezervasyonlar") {
-      // activeScreen = const Rezervasyonlar();
+      activeScreen = const Rezervasyonlar();
     } else if (screen == "oyuncular") {
       activeScreen = const Oyuncular();
     }
@@ -170,6 +173,14 @@ class _MainState extends ConsumerState<Main> {
         centerTitle: true,
         actions: screen != "login"
             ? [
+                ref.watch(userProvider).role == "owner"
+                    ? IconButton(
+                        onPressed: () {
+                          ref.read(screenProvider.notifier).setScreen("rezervasyonlar");
+                        },
+                        icon: const Icon(Icons.date_range),
+                      )
+                    : Container(),
                 IconButton(
                   onPressed: () {
                     showModalBottom();
@@ -196,7 +207,10 @@ class _MainState extends ConsumerState<Main> {
           : null,
       body: activeScreen,
       extendBody: true,
-      bottomNavigationBar: screen != "login" ? const BottomNavigation() : null,
+      bottomNavigationBar:
+          screen != "login" && ref.watch(userProvider).role == "player"
+              ? const BottomNavigation()
+              : null,
     );
   }
 }

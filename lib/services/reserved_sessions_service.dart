@@ -32,7 +32,7 @@ class ReserveSessionService {
       String playerId) async {
     // try {
     final response = await dio.get(
-        "$API_BASEURL/api/reservedsession/PlayerReservedSessions?teamId=$playerId");
+        "$API_BASEURL/api/reservedsession/PlayerReservedSessions?playerId=$playerId");
 
     if (response.statusCode != 200) {
       throw (response.data);

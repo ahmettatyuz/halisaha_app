@@ -4,8 +4,8 @@ import 'package:halisaha_app/services/team_service.dart';
 
 class TeamsNotifier extends StateNotifier<List<Team>> {
   TeamsNotifier() : super([Team()]);
-  Future<List<Team>> fetchAllTeams() async {
-    final teams = await TeamsService().getAllTeams();
+  Future<List<Team>> fetchAllTeams(int playerId) async {
+    final teams = await TeamsService().getTeamsIncludePlayer(playerId);
     state = teams;
     return teams;
   }

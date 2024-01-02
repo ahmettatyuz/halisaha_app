@@ -25,7 +25,7 @@ class RezervasyonOwner extends ConsumerWidget {
             Column(
               children: [
                 Text(
-                  "Oyuncu Bilgileri",
+                  "Takımlar",
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold),
@@ -36,34 +36,29 @@ class RezervasyonOwner extends ConsumerWidget {
                 Row(
                   children: [
                     Icon(
-                      Icons.person,
+                      Icons.security,
                       color: Theme.of(context).colorScheme.primary,
                     ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(session.evSahibiTakim!.name!),
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                InkWell(
-                  onTap: () {},
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      // Text(
-                      //   session.player!.phone!.toString(),
-                      //   maxLines: 2,
-                      //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      //         color: Theme.of(context).colorScheme.primary,
-                      //       ),
-                      // ),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.shield_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(session.deplasmanTakim!.name!),
+                  ],
                 ),
               ],
             )

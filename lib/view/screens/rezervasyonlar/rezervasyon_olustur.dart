@@ -31,6 +31,7 @@ class _RezervasyonOlusturState extends ConsumerState<RezervasyonOlustur> {
   TextEditingController trasportAdresController = TextEditingController();
   String secilenTarih = "__/__/____";
   String secilenTarihValue = "";
+  
   @override
   Widget build(BuildContext context) {
     Team? evsahibi = ref.watch(evSahibiProvider);

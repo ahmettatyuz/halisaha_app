@@ -14,7 +14,7 @@ class RezervasyonPlayer extends ConsumerWidget {
     return Card(
       child: Column(children: [
         Text(
-          session.session!.owner!.ownerFirstName!.toString(),
+          session.session!.owner!.pitchName!.toString(),
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const Divider(),

@@ -39,7 +39,6 @@ class _RezervasyonlarState extends ConsumerState<Rezervasyonlar> {
           );
         } else if (snapshot.hasData) {
           List<ReservedSession> reservedSessions = snapshot.data!;
-
           return ListView.builder(
             itemCount: reservedSessions.length,
             itemBuilder: (context, index) {
