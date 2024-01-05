@@ -4,6 +4,7 @@ import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/reserved_sessions.dart';
 import 'package:halisaha_app/models/user.dart';
 import 'package:halisaha_app/services/reserved_sessions_service.dart';
+import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyon_detay.dart';
 import 'package:halisaha_app/view/widgets/rezervasyon/rezervasyon_owner.dart';
 import 'package:halisaha_app/view/widgets/rezervasyon/rezervasyon_player.dart';
 
@@ -21,7 +22,9 @@ class _RezervasyonlarState extends ConsumerState<Rezervasyonlar> {
   Widget build(BuildContext context) {
     User user = ref.watch(userProvider);
     return FutureBuilder(
-      future: user.role=="player" ? reserveService.getReservedSessionForPlayer(user.id!) : reserveService.getReservedSessionForOwner(user.id!),
+      future: user.role == "player"
+          ? reserveService.getReservedSessionForPlayer(user.id!)
+          : reserveService.getReservedSessionForOwner(user.id!),
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -43,7 +46,15 @@ class _RezervasyonlarState extends ConsumerState<Rezervasyonlar> {
             itemCount: reservedSessions.length,
             itemBuilder: (context, index) {
               var session = reservedSessions[index];
-              return user.role == "player" ? RezervasyonPlayer(session: session): RezervasyonOwner(session: session);
+              return InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (ctx) => RezervasyonDetay(rezervasyon: session,))),
+                child: user.role == "player"
+                    ? RezervasyonPlayer(session: session)
+                    : RezervasyonOwner(session: session),
+              );
             },
           );
         } else {

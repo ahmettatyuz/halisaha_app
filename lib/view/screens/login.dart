@@ -48,7 +48,7 @@ class _LoginState extends ConsumerState<Login> {
           print("telefon :" + owner.phone.toString());
 
           await TokenManager.setToken(token);
-          ref.read(screenProvider.notifier).setScreen("halisahalar");
+          ref.read(screenProvider.notifier).setScreen("rezervasyonlar");
         } else {
           ref.read(screenProvider.notifier).setScreen("login");
           messageBox(context, "Uyarı", token.toString(), "Tamam");

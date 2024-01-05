@@ -94,28 +94,14 @@ class _SessionCardState extends ConsumerState<SessionCard> {
       return InkWell(
         onTap: user.role == "player"
             ? () {
-                // showDatePicker(
-                //   context: context,
-                //   initialDate: DateTime.now(),
-                //   firstDate: DateTime.now(),
-                //   lastDate: DateTime.now().add(
-                //     const Duration(days: 30),
-                //   ),
-                // ).then((value) {
-                //   if (value != null) {
-                //     ReserveSessionService().reserveSession(
-                //         value.toString().split(" ")[0],
-                //         widget.id,
-                //         ref.watch(userProvider).id!);
-                //   }
-                // });
                 ref.read(evSahibiProvider.notifier).setTakim(null);
                 ref.read(deplasmanProvider.notifier).setRakipTakim(null);
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) =>
-                            RezervasyonOlustur(sessionId: widget.id)));
+                  context,
+                  MaterialPageRoute(
+                    builder: (ctx) => RezervasyonOlustur(sessionId: widget.id),
+                  ),
+                );
               }
             : null,
         child: card(),
@@ -160,7 +146,7 @@ class _SessionCardState extends ConsumerState<SessionCard> {
         confirmDismiss: (direction) async {
           bool delete = false;
           if (direction == DismissDirection.endToStart) {
-            showDialog(
+            await showDialog(
               context: context,
               useSafeArea: true,
               builder: (ctx) => AlertDialog(

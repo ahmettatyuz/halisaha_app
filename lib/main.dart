@@ -18,8 +18,6 @@ import 'package:halisaha_app/view/screens/rezervasyonlar/rezervasyonlar.dart';
 import 'package:halisaha_app/view/screens/takimlar/takimlar.dart';
 import 'package:halisaha_app/view/widgets/main/bottom_navigation.dart';
 import 'package:halisaha_app/view/widgets/main/modal_bottom.dart';
-import 'package:halisaha_app/view/widgets/takimlar/takim_ekle.dart';
-import 'package:http/http.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -176,7 +174,9 @@ class _MainState extends ConsumerState<Main> {
                 ref.watch(userProvider).role == "owner"
                     ? IconButton(
                         onPressed: () {
-                          ref.read(screenProvider.notifier).setScreen("rezervasyonlar");
+                          ref
+                              .read(screenProvider.notifier)
+                              .setScreen("rezervasyonlar");
                         },
                         icon: const Icon(Icons.date_range),
                       )
@@ -190,21 +190,6 @@ class _MainState extends ConsumerState<Main> {
               ]
             : [],
       ),
-      floatingActionButton: screen == "takimlar"
-          ? FloatingActionButton.extended(
-              label: const Text("Takım oluştur"),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  useSafeArea: true,
-                  builder: (ctx) {
-                    return const TakimEkle();
-                  },
-                );
-              },
-              icon: const Icon(Icons.add),
-            )
-          : null,
       body: activeScreen,
       extendBody: true,
       bottomNavigationBar:

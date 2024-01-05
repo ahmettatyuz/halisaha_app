@@ -32,7 +32,7 @@ class TakimCard extends ConsumerWidget {
                   ),
                   SizedBox(
                     width: 200,
-                    child: team.players!.length > 0
+                    child: team.players!.isNotEmpty
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

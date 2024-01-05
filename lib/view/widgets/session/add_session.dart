@@ -27,7 +27,8 @@ class _AddSessionState extends ConsumerState<AddSession> {
     } else {
       try {
         print(widget.time);
-        session = await sessionService.addSession(ref.watch(ownerProvider).id!, widget.time);
+        session = await sessionService.addSession(
+            ref.watch(ownerProvider).id!, widget.time);
         Navigator.pop(context);
         ref
             .read(sessionsProvider.notifier)
@@ -94,34 +95,28 @@ class _AddSessionState extends ConsumerState<AddSession> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    widget.time,
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground),
+                  TextButton.icon(
+                    label: Text(widget.time),
+                    icon: const Icon(Icons.watch_later_outlined),
+                    onPressed: () async {
+                      final _time = widget.time;
+                      final selectedTime = await showTimePicker(
+                        context: context,
+                        initialTime: widget.time == "__:__"
+                            ? TimeOfDay.now()
+                            : TimeOfDay(
+                                hour: int.parse(_time.split(":")[0]),
+                                minute: int.parse(_time.split(":")[1])),
+                      );
+                      setState(() {
+                        if (selectedTime != null) {
+                          widget.time =
+                              "${selectedTime.hour}:${selectedTime.minute}";
+                        }
+                      });
+                    },
                   ),
                 ],
-              ),
-              TextButton.icon(
-                label: const Text("Seç"),
-                icon: const Icon(Icons.watch_later_outlined),
-                onPressed: () async {
-                  final _time = widget.time;
-
-                  final selectedTime = await showTimePicker(
-                    context: context,
-                    initialTime: widget.time == "__:__"
-                        ? TimeOfDay.now()
-                        : TimeOfDay(
-                            hour: int.parse(_time.split(":")[0]),
-                            minute: int.parse(_time.split(":")[1])),
-                  );
-                  setState(() {
-                    if (selectedTime != null) {
-                      widget.time =
-                          "${selectedTime.hour}:${selectedTime.minute}";
-                    }
-                  });
-                },
               ),
             ],
           ),
