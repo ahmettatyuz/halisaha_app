@@ -111,9 +111,10 @@ class TeamsService {
     // }
   }
 
-    Future<List<Team>> getTeamsIncludePlayer(int playerId) async {
+  Future<List<Team>> getTeamsIncludePlayer(int playerId) async {
     // try {
-    final response = await dio.get("$API_BASEURL/api/Team/teamIncludePlayer?playerId=$playerId");
+    final response = await dio
+        .get("$API_BASEURL/api/Team/teamIncludePlayer?playerId=$playerId");
 
     if (response.statusCode != 200) {
       throw (response.data);
@@ -129,5 +130,21 @@ class TeamsService {
     // }
   }
 
-
+  Future<bool> editTeam(int teamId, String name) async {
+// try {
+    print(teamId);
+    print(name);
+    final response =
+        await dio.put("$API_BASEURL/api/Team?id=$teamId&name=$name");
+    if (response.statusCode != 200) {
+      throw (response.data);
+    }
+    print("gelen veriler");
+    print("silindi mi: " + response.data.toString());
+    return true;
+    // } catch (e) {
+    //   print(e);
+    //   throw (e);
+    // }
+  }
 }

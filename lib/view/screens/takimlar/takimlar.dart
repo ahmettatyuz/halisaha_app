@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
@@ -5,6 +7,7 @@ import 'package:halisaha_app/models/team.dart';
 import 'package:halisaha_app/services/team_service.dart';
 import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/custom/custom_search_bar.dart';
+import 'package:halisaha_app/view/custom/custom_text_field.dart';
 import 'package:halisaha_app/view/custom/helpers.dart';
 import 'package:halisaha_app/view/screens/takimlar/takim_detay.dart';
 import 'package:halisaha_app/view/widgets/takimlar/takim_card.dart';
@@ -24,6 +27,7 @@ class _TakimlarState extends ConsumerState<Takimlar> {
   }
 
   TextEditingController searchText = TextEditingController();
+  TextEditingController teamNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +121,47 @@ class _TakimlarState extends ConsumerState<Takimlar> {
                           if (DismissDirection.startToEnd == direction &&
                               takimlar[index].captainPlayer.toString() ==
                                   ref.watch(userProvider).id) {
-                            print("duzenle");
+                            teamNameController.text = takimlar[index].name!;
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomTextField(
+                                      icon: Icons.shield,
+                                      controller: teamNameController,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CustomButton(
+                                          buttonText: "Onayla",
+                                          icon: Icons.check,
+                                          onPressed: () async {
+                                            await TeamsService().editTeam(
+                                                takimlar[index].id!,
+                                                teamNameController.text.trim());
+                                            Navigator.pop(context);
+                                            setState(() {});
+                                          },
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("İptal"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                             return false;
                           } else {
                             toast(
