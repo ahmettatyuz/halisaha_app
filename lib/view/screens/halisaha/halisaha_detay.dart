@@ -1,11 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:halisaha_app/models/owner.dart';
 import 'package:halisaha_app/models/session.dart';
+import 'package:halisaha_app/services/owner_service.dart';
 import 'package:halisaha_app/services/session_service.dart';
+import 'package:halisaha_app/view/custom/custom_button.dart.dart';
 import 'package:halisaha_app/view/widgets/session/session_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,11 +25,12 @@ class _HalisahaState extends ConsumerState<Halisaha> {
   final sessionService = SessionService();
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-
+  double vote = 5;
   @override
   Widget build(BuildContext context) {
     final CameraPosition location = CameraPosition(
-      target: LatLng(double.parse(widget.owner.coordinate1!), double.parse(widget.owner.coordinate2!)),
+      target: LatLng(double.parse(widget.owner.coordinate1!),
+          double.parse(widget.owner.coordinate2!)),
       zoom: 16,
     );
     return Scaffold(
@@ -52,7 +58,9 @@ class _HalisahaState extends ConsumerState<Halisaha> {
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
               },
-              markers: {Marker(markerId:const MarkerId("1"),position: location.target)},
+              markers: {
+                Marker(markerId: const MarkerId("1"), position: location.target)
+              },
             ),
           ),
           Row(
@@ -62,10 +70,88 @@ class _HalisahaState extends ConsumerState<Halisaha> {
                 label: const Text("Yol Tarifi Al"),
                 icon: const Icon(Icons.route),
                 onPressed: () {
-                  launchUrl(Uri.parse("https://maps.apple.com/?q=${location.target.latitude},${location.target.longitude}"));
+                  launchUrl(Uri.parse(
+                      "https://maps.apple.com/?q=${location.target.latitude},${location.target.longitude}"));
+                },
+              ),
+              TextButton.icon(
+                label: const Text("Puan Ver"),
+                icon: const Icon(Icons.star),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onBackground,
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset("assets/icons/pitch.png", scale: 3),
+                          RatingBar.builder(
+                            initialRating: vote,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                            ),
+                            allowHalfRating: true,
+                            unratedColor:
+                                Theme.of(context).colorScheme.secondary,
+                            onRatingUpdate: (rating) {
+                              vote = rating;
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  "İptal",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              CustomButton(
+                                buttonText: "Puan Ver",
+                                icon: Icons.star,
+                                onPressed: () async {
+                                  await OwnerService().voteOwner(widget.owner.id!, vote);
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
                 },
               ),
             ],
+          ),
+          RatingBar.builder(
+            ignoreGestures: true,
+            initialRating: widget.owner.point!.toDouble(),
+            minRating: 1,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => Icon(
+              Icons.star,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            unratedColor: Theme.of(context).colorScheme.primaryContainer,
+            onRatingUpdate: (rating) {
+              debugPrint(rating.toString());
+            },
           ),
           SizedBox(
             width: double.infinity,

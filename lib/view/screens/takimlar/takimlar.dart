@@ -139,6 +139,12 @@ class _TakimlarState extends ConsumerState<Takimlar> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("İptal"),
+                                        ),
                                         CustomButton(
                                           buttonText: "Onayla",
                                           icon: Icons.check,
@@ -149,12 +155,6 @@ class _TakimlarState extends ConsumerState<Takimlar> {
                                             Navigator.pop(context);
                                             setState(() {});
                                           },
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text("İptal"),
                                         ),
                                       ],
                                     ),

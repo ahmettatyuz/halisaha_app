@@ -26,6 +26,7 @@ class OwnerService {
       String adres,
       String isYeri,
       String webAdres,
+      bool transport,
       String coordinate1,
       String coordinate2) async {
     try {
@@ -42,6 +43,7 @@ class OwnerService {
         "point": 0,
         "coordinate1": coordinate1,
         "coordinate2": coordinate2,
+        "transport": transport ? "1" : "0",
         "createDate": "2023-11-14T19:43:21.916Z"
       });
       return [response.statusCode.toString(), response.data.toString()];
@@ -59,7 +61,7 @@ class OwnerService {
       String isyeri,
       String adres,
       String web,
-      int point,
+      double point,
       String coordinate1,
       String coordinate2) async {
     try {
@@ -145,6 +147,21 @@ class OwnerService {
       throw ("İnternet bağlantısını kontrol edin");
     } catch (e) {
       throw (e.toString());
+    }
+  }
+
+  Future<void> voteOwner(int ownerId, double puan) async {
+    try {
+      final response = await dio
+          .patch("$API_BASEURL/api/Owner?ownerId=$ownerId&yenipuan=$puan");
+
+      if (response.statusCode != 200) {
+        throw (response.data);
+      }
+      print(response.data);
+      print(response.statusCode);
+    } catch (e) {
+      throw (e);
     }
   }
 }

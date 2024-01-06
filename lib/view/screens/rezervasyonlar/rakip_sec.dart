@@ -9,7 +9,6 @@ import 'package:halisaha_app/view/widgets/takimlar/takim_card.dart';
 
 class RakipSec extends ConsumerStatefulWidget {
   const RakipSec({super.key});
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _RakipSecState();
 }
@@ -45,11 +44,12 @@ class _RakipSecState extends ConsumerState<RakipSec> {
             future: TeamsService().getAllTeams(),
             builder: ((context, snapshot) {
               if (snapshot.data != null && snapshot.data!.isNotEmpty) {
+                int exceptId = ref.watch(evSahibiProvider)!.id!;
                 List<Team> teams = snapshot.data!;
                 teams = teams
                     .where((element) => element.name!
                         .toLowerCase()
-                        .contains(searchTakim.text.toLowerCase()))
+                        .contains(searchTakim.text.toLowerCase()) && element.id!=exceptId)
                     .toList();
                 return ListView.builder(
                   itemBuilder: (context, index) {

@@ -29,6 +29,7 @@ class _RegisterState extends ConsumerState<Register> {
   TextEditingController adresController = TextEditingController();
   TextEditingController websiteController = TextEditingController();
   String selectedCity = "01";
+  bool transport = false;
   TextEditingController parola1Controller = TextEditingController();
   TextEditingController parola2Controller = TextEditingController();
   User user = User();
@@ -37,6 +38,14 @@ class _RegisterState extends ConsumerState<Register> {
   double currentLatitude = 0;
   double currentLongitude = 0;
   Set<Marker> markers = {};
+
+  List<String> mevkiler = [
+    'Kaleci',
+    'Defans',
+    'Orta Saha',
+    'Forvet',
+  ];
+  String secilenMevki = "Orta Saha";
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -98,16 +107,18 @@ class _RegisterState extends ConsumerState<Register> {
             if (markers.isNotEmpty) {
               OwnerService()
                   .register(
-                      parola1,
-                      adSoyad,
-                      eposta,
-                      telefon,
-                      selectedCity,
-                      adres,
-                      isyeri,
-                      webAdres,
-                      markers.first.position.latitude.toString(),
-                      markers.first.position.longitude.toString())
+                parola1,
+                adSoyad,
+                eposta,
+                telefon,
+                selectedCity,
+                adres,
+                isyeri,
+                webAdres,
+                transport,
+                markers.first.position.latitude.toString(),
+                markers.first.position.longitude.toString(),
+              )
                   .then((value) {
                 if (value[0] == "200") {
                   Navigator.pop(context);
@@ -166,7 +177,7 @@ class _RegisterState extends ConsumerState<Register> {
           if (parola1 == parola2) {
             UserService()
                 .registerPlayerRequest(
-                    parola1, adSoyad, eposta, telefon, selectedCity, adres, "")
+                    parola1, adSoyad, eposta, telefon, selectedCity, adres, secilenMevki)
                 .then((value) {
               if (value[0] == "200") {
                 Navigator.pop(context);
@@ -329,6 +340,49 @@ class _RegisterState extends ConsumerState<Register> {
                   const SizedBox(
                     height: 10,
                   ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: paddingValue),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: paddingValue - 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Theme.of(context).colorScheme.secondary),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Mevki:",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(),
+                          ),
+                          DropdownButton(
+                            value: secilenMevki,
+                            onChanged: (value) {
+                              setState(() {
+                                secilenMevki = value;
+                              });
+                            },
+                            items:
+                                mevkiler.map<DropdownMenuItem>((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                          const Icon(Icons.star),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             Padding(
@@ -439,6 +493,18 @@ class _RegisterState extends ConsumerState<Register> {
                   ),
                   const SizedBox(
                     height: 15,
+                  ),
+                  SwitchListTile(
+                    title: const Text("Halısahanın servisi var mı ?"),
+                    value: transport,
+                    onChanged: (checked) {
+                      setState(() {
+                        transport = checked;
+                      });
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: paddingValue),

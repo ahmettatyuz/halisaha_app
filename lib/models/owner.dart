@@ -19,7 +19,7 @@ class Owner {
   String? phone;
   String? city;
   String? address;
-  int? point;
+  double? point;
   String? coordinate1;
   String? coordinate2;
   int? transport;
@@ -137,7 +137,7 @@ class Owner {
         phone: json["phone"],
         city: json["city"],
         address: json["address"],
-        point: json["point"],
+        point: double.parse(double.parse(json["point"].toString()).toStringAsFixed(1)) ,
         coordinate1: json["coordinate1"],
         coordinate2: json["coordinate2"],
         transport: json["transport"],
@@ -155,7 +155,7 @@ class Owner {
         "phone": phone,
         "city": city,
         "address": address,
-        "point": point,
+        "point": point.toString(),
         "coordinate1": coordinate1,
         "coordinate2": coordinate2,
         "transport": transport,

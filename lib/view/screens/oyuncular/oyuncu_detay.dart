@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:halisaha_app/global/providers/user_provider.dart';
 import 'package:halisaha_app/models/owner.dart';
@@ -22,7 +21,8 @@ class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
   @override
   Widget build(BuildContext context) {
     void takimaEkleModal(Player player) async {
-      List<Team> teams = await TeamsService().getPlayersTeam(ref.watch(playerProvider).id!);
+      List<Team> teams =
+          await TeamsService().getPlayersTeam(ref.watch(playerProvider).id!);
       print(player.id);
       showDialog(
         context: context,
@@ -73,22 +73,6 @@ class _OyuncuDetayState extends ConsumerState<OyuncuDetay> {
               style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold),
-            ),
-            RatingBar.builder(
-              initialRating: 3,
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              unratedColor: Theme.of(context).colorScheme.primaryContainer,
-              onRatingUpdate: (rating) {
-                debugPrint(rating.toString());
-              },
             ),
             const SizedBox(
               height: 10,

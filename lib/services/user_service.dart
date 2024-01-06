@@ -19,7 +19,7 @@ class UserService {
         "phone": telefon,
         "city": selectedCity,
         "address": adres,
-        "position": "123"
+        "position": position
       });
       return [response.statusCode.toString(), response.data.toString()];
     } catch (e) {
