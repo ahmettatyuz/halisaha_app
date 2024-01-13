@@ -148,6 +148,24 @@ class _RezervasyonDetayState extends ConsumerState<RezervasyonDetay> {
                     const SizedBox(
                       height: 10,
                     ),
+                    if (widget.rezervasyon.address!.isNotEmpty)
+                      Column(
+                        children: [
+                          Text(
+                            "Servisin sizi alacağı konum",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
+                          ),
+                          Text(widget.rezervasyon.address!),
+                        ],
+                      ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       "Ev Sahibi Takım",
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -190,21 +208,6 @@ class _RezervasyonDetayState extends ConsumerState<RezervasyonDetay> {
                     const SizedBox(
                       height: 10,
                     ),
-                    if (widget.rezervasyon.address!.isNotEmpty)
-                      Column(
-                        children: [
-                          Text(
-                            "Servisin sizi alacağı konum",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                          ),
-                          Text(widget.rezervasyon.address!),
-                        ],
-                      ),
                   ],
                 ),
               ),
