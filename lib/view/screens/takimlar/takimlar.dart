@@ -36,8 +36,12 @@ class _TakimlarState extends ConsumerState<Takimlar> {
             TeamsService().getTeamsIncludePlayer(ref.watch(playerProvider).id!),
         builder: (context, snapshot) {
           if (snapshot.data != null && snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text("Hiç takımınız yok !"),
+            return Center(
+              child: Text("Hiç takımınız yok !",
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      )),
             );
           }
           if (snapshot.data != null && snapshot.data!.isNotEmpty) {
